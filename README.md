@@ -1,2 +1,0 @@
-# networking
-Networking for PandoraPay
