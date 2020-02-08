@@ -33,9 +33,9 @@ export default class SocketRouter {
 
     }
 
-    _newRoute (app, get, route, callback, maxCallsPerSecond, middleWare, affix='', apiType='') {
+    _newRoute (app, get, route, callback, maxCallsPerSecond, middleware, affix='', apiType='') {
 
-        get( affix + route, (req, res) => this._routesGuardian.guardRoute( route, () => middleWare( app, affix + route, req, res, callback, apiType ) ) );
+        get( affix + route, (req, res) => this._routesGuardian.guardRoute( route, () => middleware( app, affix + route, req, res, callback, apiType ) ) );
 
         /**
          * init route guard

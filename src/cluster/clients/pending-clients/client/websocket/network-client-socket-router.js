@@ -67,11 +67,11 @@ export default class NetworkClientSocketRouter extends CommonSocketRouter{
      * Two Way Middleware returns a json from the request and it subscribes to an event.
      * It call the request callback and subscribe for notification
      */
-    async _twoWaysMiddleware ( app, route, data, callback, method ){
+    async _twoWaysMiddleware ( app, route, data, callback, method, apiType ){
 
         try {
 
-            const out = await method(data, callback, data => this._notifySubscriberMiddleware(route, data, callback ), app );
+            const out = await method(data, callback, data => this._notifySubscriberMiddleware(route, data, callback, app ), app );
 
             if (callback)
                 callback(out);
@@ -90,9 +90,9 @@ export default class NetworkClientSocketRouter extends CommonSocketRouter{
     /**
      * Method that pushes notifications to the subscribers
      */
-    _notifySubscriberMiddleware(route, data, callback){
+    _notifySubscriberMiddleware(route, data, callback, socket){
 
-        callback.emit(route+'/answer', data);
+        socket.emit(route+'/answer', data);
 
     }
 
