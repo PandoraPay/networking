@@ -36,7 +36,11 @@ export default class BasicSocket {
         this.disconnectedPromise = new Promise( resolve =>  this._socket.once("disconnect", () => resolve( ) ) );
 
         this._socket.once("disconnect", ()=>{
+
             this._clearSubscriptions();
+
+            this._scope.events.emit('sockets/disconnected', { socket: this } );
+
         });
     }
 
@@ -126,6 +130,8 @@ export default class BasicSocket {
                 const off = this._subscriptions[key];
                 off();
             }
+
+        this._subscriptions = {};
 
     }
 
