@@ -37,9 +37,10 @@ export default class BasicSocket {
 
         this._socket.once("disconnect", ()=>{
 
-            this._clearSubscriptions();
-
-            this._scope.events.emit('sockets/disconnected', { socket: this } );
+            if (this.handshake) {
+                this._clearSubscriptions();
+                this._scope.events.emit('sockets/disconnected', {socket: this});
+            }
 
         });
     }
