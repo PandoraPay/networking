@@ -23,6 +23,8 @@ export default class NetworkMasterCluster extends MasterCluster {
         this.allSockets = { };
         this.allSocketsCount = 0;
 
+        setInterval( ()=> this._scope.logger.log(this, "this.allSocketsCount", this.allSocketsCount), 1000);
+
         /**
          * Apply the rest of the constructor
          *
@@ -79,6 +81,31 @@ export default class NetworkMasterCluster extends MasterCluster {
 
     }
 
+    includeSocket(socket){
+
+        if (!this.allSockets[socket.id]) {
+            this.allSockets[socket.id] = socket;
+            this.allSocketsCount++;
+
+            if (!socket.__includeSocketInitialized) {
+                socket.__includeSocketInitialized = true;
+                socket.once("disconnect", () => {
+                    this.removeSocket(socket);
+                });
+            }
+
+        }
+
+    }
+
+    removeSocket(socket){
+
+        if (this.allSockets[socket.id]) {
+            delete this.allSockets[socket.id];
+            this.allSocketsCount--;
+        }
+
+    }
 
     broadcast(name, data, senderSockets = {}){
 

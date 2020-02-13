@@ -139,8 +139,7 @@ export default class NetworkServerSocket extends server {
             /**
              *  Store the socket unique id
              */
-            this._scope.masterCluster.allSockets[newServerClientSocket.id] = newServerClientSocket;
-            this._scope.masterCluster.allSocketsCount++;
+            this._scope.masterCluster.includeSocket( newServerClientSocket );
 
             /**
              * Initialize the routes for the serverSocket router
@@ -182,7 +181,7 @@ export default class NetworkServerSocket extends server {
             /**
              * Removing the clientSocket from the connected list
              */
-            socket.on("disconnect", ()=>{
+            socket.once("disconnect", ()=>{
 
                 if (this.list[address]) {
                     delete this.list[address];
@@ -217,10 +216,9 @@ export default class NetworkServerSocket extends server {
                 if (!this._uniqueList[addressUnique]) delete this._uniqueList[addressUnique];
             }
 
-            if (newServerClientSocket && this._scope.masterCluster.allSockets[newServerClientSocket.id]) {
-                delete this._scope.masterCluster.allSockets[newServerClientSocket.id];
-                this._scope.masterCluster.allSocketsCount--;
-            }
+            if (newServerClientSocket )
+                this._scope.masterCluster.removeSocket(newServerClientSocket);
+
 
             //this._scope.logger.error(this, `Socket Recently Disconnected `, err );
 

@@ -82,7 +82,7 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
                     this._scope.heartBeat.addProcessAndTask("connectedNodeCollectStats", this._collectStats.bind(this), 2, this.id, false);
                 }
 
-                scope.socket.on("disconnect", this._socketDisconnected.bind(this) );
+                scope.socket.once("disconnect", this._socketDisconnected.bind(this) );
 
             }
             else

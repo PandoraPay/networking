@@ -97,8 +97,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 			/**
 			 *  Store the socket unique id
 			 */
-			this._scope.masterCluster.allSockets[clientSocket.id] = clientSocket;
-			this._scope.masterCluster.allSocketsCount++;
+			this._scope.masterCluster.includeSocket( clientSocket );
 
 			/**
 			 * let's add it to the connected-node-schema
@@ -121,7 +120,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 			clientSocket.on("disconnect", ()=>{
 
 				if (this.list[address]){
-					this.list[address] = undefined; delete this.list[address];
+					delete this.list[address];
 					this._scope.masterCluster.totalPeers.updatePeers(-1, 0 );
 				}
 
@@ -143,10 +142,8 @@ export default class NetworkClientsCluster extends ClientsCluster {
 				if (!this._uniqueList[addressUnique]) delete this._uniqueList[addressUnique];
 			}
 
-			if (clientSocket && this._scope.masterCluster.allSockets[clientSocket.id]) {
-				delete this._scope.masterCluster.allSockets[clientSocket.id];
-				this._scope.masterCluster.allSocketsCount--;
-			}
+			if (clientSocket)
+				this._scope.masterCluster.removeSocket(clientSocket);
 
 			//this._scope.logger.error(this, `Client Socket Recently Disconnected ${clientSocket.address.toString()}`, err );
 
