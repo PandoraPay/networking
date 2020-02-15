@@ -14,7 +14,7 @@ export default class NetworkClientSocket extends BasicSocket {
         if (address)
             this.address = ipAddress.create(address);
 
-        return new Promise((resolve, reject)=>{
+        return new Promise(async (resolve, reject)=>{
 
             //disconnect the previous
             if (this._socket)
@@ -61,10 +61,20 @@ export default class NetworkClientSocket extends BasicSocket {
                 handshake.address = this.address.toString();
                 this.handshake = handshake;
 
+                this.socketInitialized();
+
                 resolve(true);
 
             });
 
+            Helper.sleep( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutConnection, () => {
+
+                if (this.handshake)
+                    resolve(true);
+                else
+                    resolve(false);
+
+            } );
 
         });
 

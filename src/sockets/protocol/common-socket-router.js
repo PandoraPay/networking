@@ -101,6 +101,8 @@ export default class CommonSocketRouter extends SocketsRouter{
 
     _stats( consensusType = this._scope.masterCluster.consensusType ){
 
+
+
         return {
             short: this._scope.argv.settings.applicationShort,
 

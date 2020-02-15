@@ -1,4 +1,3 @@
-
 const ipaddr = require('ipaddr.js');
 
 const {Exception} = global.kernel.helpers;

@@ -45,13 +45,15 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
      */
     async connectClient(  ){
 
+        this._scope.logger.log(this, "connectClient");
+
         const client = new NetworkClientSocket({
             ...this._scope,
         }, ipAddress.create( undefined, this.address )  );
 
         try {
 
-            const connected = await Helper.promiseTimeout( client.connectAsync(), this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutConnection );
+            const connected = await client.connectAsync();
 
             if (!connected) throw "failed to connect";
 
@@ -62,7 +64,7 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
             //this._scope.logger.error(this, `Couldn't connect client to ${this.address}`, err );
 
             //make sure it got disconnected
-            if (client) client.disconnect();
+            if (client && client._socket) client.disconnect();
 
             const newScore = this.score - 1;
             if (newScore >= this.checkProperty("minSize", "score" )){

@@ -17,25 +17,35 @@ export default class BasicSocket {
         };
 
         this.socket = socket;
+
+        this._disconnectedPromiseResolver = undefined;
     }
 
     set socket(newSocket){
 
-        if (!newSocket) return;
+        if (!newSocket || this._socket === newSocket ) return;
 
         this._socket = newSocket;
-        this._socketInitialized();
     }
 
-    _socketInitialized(){
+    socketInitialized(){
+
+        if (this._socket.disconnected) return false;
 
         this._socket.additional = {
             timeOpen: new Date().getTime(),
         };
 
-        this.disconnectedPromise = new Promise( resolve =>  this._socket.once("disconnect", () => resolve( ) ) );
+        this.disconnectedPromise = new Promise( resolve =>  this._disconnectedPromiseResolver = resolve );
+
+        this._scope.logger.log(this, "socketInitialized connected");
 
         this._socket.once("disconnect", ()=>{
+
+            this._scope.logger.log(this, "socketInitialized disconnected");
+
+            if (this._disconnectedPromiseResolver)
+                this._disconnectedPromiseResolver(true);
 
             if (this.handshake) {
                 this._clearSubscriptions();
@@ -71,47 +81,48 @@ export default class BasicSocket {
 
     emitAsync(route, data, timeout = this._scope.argv.networkSettings.networkTimeout ){
 
-        if ( this.disconnected ) return;
+        if ( this.disconnected  ) return;
 
-        const race = [
-            new Promise( resolve => this.emit(route, data, (out, cb) =>  resolve( out, cb ) ) ),
-            this.disconnectedPromise
-        ];
+        let resolver, timeoutId;
+
+        const promise = new Promise( resolve => {
+            resolver = resolve;
+            this.emit(route, data, (out, cb) => {
+                clearTimeout(timeoutId);
+                resolve( out, cb )
+            } );
+        } );
 
         if (timeout)
-            race.push(new Promise(resolve => setTimeout(() => resolve(), timeout)));
+            timeoutId = setTimeout(() => resolver(), timeout);
 
         // Returns a race between our timeout and the passed in promise
-        return Promise.race( race );
+        return Promise.race([
+            promise,
+        //   this.disconnectedPromise //TODO this will cause memory leak for some reason
+        ]);
     }
 
     onceAsync(route, timeout = this._scope.argv.networkSettings.networkTimeout){
 
-        const race = [
-            new Promise ( resolve => this.once(route, (data, cb ) => resolve ( data, cb) ) ),
-            this.disconnectedPromise
-        ];
+        if ( this.disconnected ) return;
+
+        let resolver, timeoutId;
+        const promise = new Promise ( resolve => {
+            resolver = resolve;
+            this.once(route, (data, cb ) => {
+                clearTimeout(timeoutId);
+                resolve ( data, cb)
+            } )
+        } );
 
         if (timeout)
-            race.push(new Promise(resolve => setTimeout(() => resolve(), timeout)));
+            timeoutId = setTimeout(() => resolver(), timeout);
 
-        // Returns a race between our timeout and the passed in promise
-        return Promise.race( race );
-    }
-
-    onAsync(route, timeout = this._scope.argv.networkSettings.networkTimeout){
-
-        const race = [
-            new Promise ( resolve => this.on(route, (data, cb ) => resolve ( data, cb) ) ),
-            this.disconnectedPromise,
-        ];
-
-        if (timeout)
-            race.push(new Promise(resolve => setTimeout(() => resolve(), timeout)));
-
-
-        // Returns a race between our timeout and the passed in promise
-        return Promise.race( race );
+        return Promise.race([
+            promise,
+         //   this.disconnectedPromise //TODO this will cause memory leak for some reason
+        ]);
     }
 
     subscribe(route, cb){

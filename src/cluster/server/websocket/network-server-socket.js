@@ -98,6 +98,8 @@ export default class NetworkServerSocket extends server {
 
         let address, addressUnique, newServerClientSocket;
 
+        this._scope.logger.log(this, "_acceptSocket");
+
         try {
 
             if ( this.listCount > this._scope.argv.masterCluster.serverCluster.serverSocket.maximumConnections )
@@ -111,6 +113,7 @@ export default class NetworkServerSocket extends server {
                 socketServer: this,
                 serverClientSocketRouter: this._serverClientSocketRouter,
             }, undefined, socket, handshake);
+            newServerClientSocket.socketInitialized();
 
             /**
              * checking if there is a duplicate connection
@@ -183,15 +186,11 @@ export default class NetworkServerSocket extends server {
              */
             socket.once("disconnect", ()=>{
 
-                if (this.list[address]) {
-                    delete this.list[address];
-                    this.listCount--;
-                }
+                delete this.list[address];
+                this.listCount--;
 
-                if (this._uniqueList[addressUnique]) {
-                    this._uniqueList[addressUnique]--;
-                    delete this._uniqueList[addressUnique];
-                }
+                this._uniqueList[addressUnique]--;
+                if (this._uniqueList[addressUnique] === 0) delete this._uniqueList[addressUnique];
 
                 this._scope.masterCluster.totalPeers.updatePeers(0, -1 );
 
@@ -213,7 +212,7 @@ export default class NetworkServerSocket extends server {
 
             if (addressUnique) {
                 this._uniqueList[addressUnique]--;
-                if (!this._uniqueList[addressUnique]) delete this._uniqueList[addressUnique];
+                if (this._uniqueList[addressUnique] === 0) delete this._uniqueList[addressUnique];
             }
 
             if (newServerClientSocket )
