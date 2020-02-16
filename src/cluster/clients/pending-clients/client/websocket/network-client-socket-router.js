@@ -57,7 +57,7 @@ export default class NetworkClientSocketRouter extends CommonSocketRouter{
             if (this._scope.argv.debug.enabled)
                 this._scope.logger.error(this, `${route} raised an error`, err );
 
-            return {result:false, error: err.message};
+            callback( {result:false, error: err.message} );
 
         }
 
@@ -82,7 +82,7 @@ export default class NetworkClientSocketRouter extends CommonSocketRouter{
             if (this._scope.argv.debug.enabled)
                 this._scope.logger.error(this, `${route} raised an error`, err );
 
-            return {result:false, error: err.message};
+            callback( {result:false, error: err.message} );
         }
 
     }
