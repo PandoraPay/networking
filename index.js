@@ -1,5 +1,3 @@
-if (!global.kernel) require('kernel');
-
 const kernel = global.kernel;
 
 const BasicSocket = require("src/network/basic-socket").default;
