@@ -47,7 +47,7 @@ export default class NetworkHttpServerRouter extends CommonSocketRouter{
             if (this._scope.argv.debug.enabled)
                 this._scope.logger.error(this, `${route} raised an error`, err );
 
-            res.json( {result:false, error: err.message, errorData: BufferHelper.processBufferArray( err.data ) } );
+            res.json( {result:false, error: err.message, errorData: BufferHelper.convertAllBuffersToHex( err.data ) } );
         }
 
     }
@@ -69,7 +69,7 @@ export default class NetworkHttpServerRouter extends CommonSocketRouter{
             res.json ( BufferHelper.convertAllBuffersToHex(out) );
 
         } catch (err){
-            res.json( {result:false, error: err.message, errorData: BufferHelper.processBufferArray( err.data) } );
+            res.json( {result:false, error: err.message, errorData: BufferHelper.convertAllBuffersToHex( err.data) } );
         }
 
     }
