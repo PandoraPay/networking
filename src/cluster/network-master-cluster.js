@@ -111,7 +111,7 @@ export default class NetworkMasterCluster extends MasterCluster {
 
         if ( Array.isArray(senderSockets)  ) {
             const hashMap = {};
-            senderSockets.map( it => hashMap[ typeof it === "string" ? it : it.address.toString() ] = true );
+            senderSockets.map( it => hashMap[ typeof it === "string" ? it : it.id ] = true );
             senderSockets = hashMap;
         }
 
@@ -124,6 +124,26 @@ export default class NetworkMasterCluster extends MasterCluster {
 
         return clients + server;
 
+    }
+
+    async broadcastAsync(name, data, senderSockets={}){
+
+        if ( Array.isArray(senderSockets)  ) {
+            const hashMap = {};
+            senderSockets.map( it => hashMap[ typeof it === "string" ? it : it.id ] = true );
+            senderSockets = hashMap;
+        }
+
+        const array = [];
+        if (this.clientsCluster)
+            array.push( this.clientsCluster.broadcastAsync(name, data, senderSockets) );
+
+        if (this.serverCluster)
+            array.push( this.serverCluster.broadcastAsync(name, data, senderSockets) );
+
+        const out = await Promise.all(array);
+
+        return [...out[0], ...out[1] ];
     }
 
 }

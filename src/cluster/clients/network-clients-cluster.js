@@ -161,12 +161,23 @@ export default class NetworkClientsCluster extends ClientsCluster {
 		//this._scope.logger.log(this, "broadcasting to: " + this.listCount + " clients");
 
 		for (const address in this.list)
-			this.list[address].emit(name, data);
+			if (!senderSockets[this.list[address].id])
+				this.list[address].emit(name, data);
 
 		return this.listCount;
 
 	}
 
+	broadcastAsync(name, data, senderSockets = {}){
+
+		const array = [];
+
+		for (const address in this.list)
+			if (!senderSockets[this.list[address].id])
+				array.push( this.list[address].emitAsync(name, data) );
+
+		return Promise.all(array);
+	}
 
 }
 

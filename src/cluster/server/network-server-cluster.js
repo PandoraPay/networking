@@ -31,6 +31,16 @@ export default class NetworkServerCluster extends ServerCluster {
 
 	}
 
+	async broadcastAsync(name, data, senderSockets){
+		if (!this.httpServer) return [];
+
+		const out = await Promise.all([
+			this.httpServer.broadcastAsync(name, data, senderSockets),
+			this.serverSocket.broadcastAsync(name, data, senderSockets),
+		]);
+
+		return [ ...out[0], ...out[1] ];
+	}
 
 }
 

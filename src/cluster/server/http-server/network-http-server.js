@@ -165,5 +165,9 @@ export default class NetworkHttpServer extends HttpServer {
 
     }
 
+    broadcastAsync(name, data, senderSockets = {}){
+        return []
+    }
+
 }
 
