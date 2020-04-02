@@ -168,15 +168,20 @@ export default class NetworkClientsCluster extends ClientsCluster {
 
 	}
 
-	broadcastAsync(name, data, senderSockets = {}){
+	async broadcastAsync(name, data, timeout, senderSockets = {}){
 
-		const array = [];
+		let array = [];
 
 		for (const address in this.list)
 			if (!senderSockets[this.list[address].id])
-				array.push( this.list[address].emitAsync(name, data) );
+				array.push( this.list[address].emitAsync(name, data, timeout) );
 
-		return Promise.all(array);
+		array = await Promise.all(array);
+
+		const out = [];
+		for (let i=0; i < array.length; i++) array[i] = out[i];
+
+		return out;
 	}
 
 }

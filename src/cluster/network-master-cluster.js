@@ -23,7 +23,7 @@ export default class NetworkMasterCluster extends MasterCluster {
         this.allSockets = { };
         this.allSocketsCount = 0;
 
-        setInterval( ()=> this._scope.logger.log(this, "this.allSocketsCount", this.allSocketsCount), 1000);
+        setInterval( ()=> this._scope.logger.log(this, "this.allSocketsCount", this.allSocketsCount), 10000);
 
         /**
          * Apply the rest of the constructor
@@ -126,7 +126,7 @@ export default class NetworkMasterCluster extends MasterCluster {
 
     }
 
-    async broadcastAsync(name, data, senderSockets={}){
+    async broadcastAsync(name, data, timeout, senderSockets={}){
 
         if ( Array.isArray(senderSockets)  ) {
             const hashMap = {};
@@ -134,16 +134,19 @@ export default class NetworkMasterCluster extends MasterCluster {
             senderSockets = hashMap;
         }
 
-        const array = [];
+        let array = [];
         if (this.clientsCluster)
-            array.push( this.clientsCluster.broadcastAsync(name, data, senderSockets) );
+            array.push( this.clientsCluster.broadcastAsync(name, data, timeout, senderSockets) );
 
         if (this.serverCluster)
-            array.push( this.serverCluster.broadcastAsync(name, data, senderSockets) );
+            array.push( this.serverCluster.broadcastAsync(name, data, timeout, senderSockets) );
 
-        const out = await Promise.all(array);
+        array = await Promise.all(array);
 
-        return [...out[0], ...out[1] ];
+        const out = [];
+        for (let i=0; i < array.length; i++) array[i] = out[i];
+
+        return out.length === 2 ? out[0].concat(out[1]) : out[0];
     }
 
 }
