@@ -49,24 +49,6 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
                         position: 202,
                     },
 
-                    /**
-                     * Score combines (latency, fails, successes)
-                     * Score to sort the list by a feedback score
-                     */
-                    score: {
-
-                        sorts: {
-
-                            scoreClientsConsensus: {
-                                filter() {
-                                    return this.consensus === NodeConsensusTypeEnum.nodeConsensus && this.serverAddress !== "0.0.0.0:0";
-                                },
-                            }
-
-                        },
-
-                    },
-
                 }
             },
             schema, false), data, type, creationOptions);

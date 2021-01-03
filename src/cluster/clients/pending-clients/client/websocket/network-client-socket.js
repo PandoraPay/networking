@@ -16,6 +16,13 @@ export default class NetworkClientSocket extends BasicSocket {
 
         return new Promise(async (resolve, reject)=>{
 
+            const timeoutFail = setTimeout(  () => {
+
+                if (this.handshake) resolve(true);
+                else reject("timeout" );
+
+            }, this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutConnection );
+
             //disconnect the previous
             if (this._socket)
                 this._socket.disconnect();
@@ -51,11 +58,11 @@ export default class NetworkClientSocket extends BasicSocket {
             this.once("handshake", handshake =>{
 
                 handshake = this._scope.clientSocketRouter.handshakeValidate( handshake, this.address.toString(false, false, false) );
+                clearTimeout(timeoutFail)
 
                 if (!handshake) {
-                    console.error("handshake is invalid");
                     this._socket.disconnect();
-                    return resolve(false);
+                    return reject("Handshake is invalid");
                 }
 
                 handshake.address = this.address.toString();
@@ -66,15 +73,6 @@ export default class NetworkClientSocket extends BasicSocket {
                 resolve(true);
 
             });
-
-            Helper.sleep( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutConnection, () => {
-
-                if (this.handshake)
-                    resolve(true);
-                else
-                    resolve(false);
-
-            } );
 
         });
 

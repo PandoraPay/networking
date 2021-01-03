@@ -23,11 +23,10 @@ export default class NetworkMasterCluster extends MasterCluster {
         this.allSockets = { };
         this.allSocketsCount = 0;
 
-        setInterval( ()=> this._scope.logger.log(this, "this.allSocketsCount", this.allSocketsCount), 10000);
+        setInterval( ()=> this._scope.logger.log(this, `allSocketsCount ${this.allSocketsCount}`), 60000);
 
         /**
          * Apply the rest of the constructor
-         *
          */
         this._constructor( {
             ClientsCluster: NetworkClientsCluster,
@@ -55,13 +54,6 @@ export default class NetworkMasterCluster extends MasterCluster {
     }
 
     async _started(){
-
-
-        // setInterval( ()=>{
-        //     if (this.isMaster) {
-        //         console.log("DEBUG");
-        //     }
-        // }, 1000)
 
         await this.totalPeers.start();
 

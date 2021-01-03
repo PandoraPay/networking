@@ -98,8 +98,6 @@ export default class NetworkServerSocket extends server {
 
         let address, addressUnique, newServerClientSocket;
 
-        this._scope.logger.log(this, "_acceptSocket");
-
         try {
 
             if ( this.listCount > this._scope.argv.masterCluster.serverCluster.serverSocket.maximumConnections )

@@ -26,16 +26,6 @@ export default class NodeScoreBaseSchema extends NodeBaseSchema {
                         default: 1000,
                         maxSize: 1 << 16 - 1,
 
-                        sorts: {
-
-                            scoreClientsConsensus: {
-                                filter() {
-                                    return this.consensus === NodeConsensusTypeEnum.nodeConsensus;
-                                },
-                            }
-
-                        },
-
                         position: 201,
                     },
 

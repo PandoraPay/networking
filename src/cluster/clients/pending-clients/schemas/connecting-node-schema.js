@@ -54,7 +54,6 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
         try {
 
             const connected = await client.connectAsync();
-
             if (!connected) throw "failed to connect";
 
             return client;
@@ -73,8 +72,6 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
             }
 
         }
-
-        return undefined;
 
     }
 

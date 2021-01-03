@@ -1,8 +1,6 @@
 import ipAddress from "src/network/ip-address"
 
 const {Exception, BufferHelper } = global.kernel.helpers;
-const {DBSchemaHelper} = global.kernel.marshal.db;
-const {Helper} = global.kernel.helpers;
 
 import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
 import NetworkClientSocketRouter from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket-router';
@@ -88,11 +86,10 @@ export default class PendingClients {
         try{
 
             let nodesQueueIds;
+
             do{
 
-                nodesQueueIds = await this._scope.db.findBySort( DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true, score: true } ), "scoreClientsConsensus", it, 10,  );
-
-                //this._scope.logger.log( this, "_connectPendingClients");
+                nodesQueueIds = await ConnectingNodeSchema.findAll( this._scope.db );
 
                 await Promise.all( nodesQueueIds.map( async it => {
 
@@ -100,7 +97,6 @@ export default class PendingClients {
                     if ( this._scope.bansManager.checkBan("client", ip.toString() ) )
                         return;
 
-                    //this._scope.logger.log( this, "locking",  it.id );
                     const lock = await it.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
 
                     //lock acquired
@@ -109,8 +105,6 @@ export default class PendingClients {
                         try {
 
                             const nodeQueue = await this._scope.db.find( ConnectingNodeSchema, it.id, undefined, undefined, {scope: { pendingClients: this, clientSocketRouter: this._clientSocketRouter } });
-
-                            //this._scope.logger.log( this, "connecting to",  nodeQueue.address );
 
                             const clientSocket = await nodeQueue.connectClient( );
 
@@ -139,7 +133,7 @@ export default class PendingClients {
             } while ( nodesQueueIds.length === 10 )
 
         }catch (err){
-
+            console.error(err);
         }
 
     }
@@ -235,13 +229,13 @@ export default class PendingClients {
              * save nodeQueue
              */
 
-
             const nodeQueue = new ConnectingNodeSchema( this._scope, undefined, pendingConnection );
 
             let save = isSeedNode;
             if (await nodeQueue.exists() === false) save = true;
 
-            if (save) await nodeQueue.save();
+            if (save)
+                await nodeQueue.save();
 
             return nodeQueue;
 
