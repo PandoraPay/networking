@@ -156,7 +156,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 
 	}
 
-	broadcast(name, data, senderSockets = {}){
+	broadcastToSockets(name, data, senderSockets = {}){
 
 		//this._scope.logger.log(this, "broadcasting to: " + this.listCount + " clients");
 
@@ -168,7 +168,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 
 	}
 
-	async broadcastAsync(name, data, timeout, senderSockets = {}){
+	async broadcastToSocketsAsync(name, data, timeout, senderSockets = {}){
 
 		let array = [];
 
@@ -179,7 +179,8 @@ export default class NetworkClientsCluster extends ClientsCluster {
 		array = await Promise.all(array);
 
 		const out = [];
-		for (let i=0; i < array.length; i++) array[i] = out[i];
+		for (let i=0; i < array.length; i++)
+			array[i] = out[i];
 
 		return out;
 	}

@@ -228,7 +228,7 @@ export default class NetworkServerSocket extends server {
 
     }
 
-    broadcast(name, data, senderSockets = {}){
+    broadcastToSockets(name, data, senderSockets = {}){
 
         //this._scope.logger.log(this, "broadcasting to: " + this.listCount + " servers");
 
@@ -240,7 +240,7 @@ export default class NetworkServerSocket extends server {
 
     }
 
-    async broadcastAsync(name, data, timeout, senderSockets = {}){
+    async broadcastToSocketsAsync(name, data, timeout, senderSockets = {}){
 
         //this._scope.logger.log(this, "broadcasting to: " + this.listCount + " servers");
 

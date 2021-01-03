@@ -63,7 +63,7 @@ export default class TotalPeers extends DBSchema{
 
         try{
 
-            if (this._scope.masterCluster.isMasterCluster)
+            if (this._scope.masterCluster.isMaster)
                 await this.delete();
 
         } catch (err){

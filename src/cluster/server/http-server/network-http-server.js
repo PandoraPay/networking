@@ -158,14 +158,14 @@ export default class NetworkHttpServer extends HttpServer {
         return `${protocol}${ssl ? 's' : ''}://${address}:${port}`;
     }
 
-    broadcast(name, data, senderSockets = {}){
+    broadcastToSockets(name, data, senderSockets = {}){
 
         //propagate to two ways callbacks
         return 0;
 
     }
 
-    broadcastAsync(name, data, timeout, senderSockets = {}){
+    broadcastToSocketsAsync(name, data, timeout, senderSockets = {}){
         return []
     }
 

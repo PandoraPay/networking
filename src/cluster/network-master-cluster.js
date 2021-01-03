@@ -99,7 +99,7 @@ export default class NetworkMasterCluster extends MasterCluster {
 
     }
 
-    broadcast(name, data, senderSockets = {}){
+    broadcastToSockets(name, data, senderSockets = {}){
 
         if ( Array.isArray(senderSockets)  ) {
             const hashMap = {};
@@ -109,16 +109,16 @@ export default class NetworkMasterCluster extends MasterCluster {
 
         let clients = 0, server = 0;
         if (this.clientsCluster)
-            clients = this.clientsCluster.broadcast(name, data, senderSockets);
+            clients = this.clientsCluster.broadcastToSockets(name, data, senderSockets);
 
         if (this.serverCluster)
-            server = this.serverCluster.broadcast(name, data, senderSockets);
+            server = this.serverCluster.broadcastToSockets(name, data, senderSockets);
 
         return clients + server;
 
     }
 
-    async broadcastAsync(name, data, timeout, senderSockets={}){
+    async broadcastToSocketsAsync(name, data, timeout, senderSockets={}){
 
         if ( Array.isArray(senderSockets)  ) {
             const hashMap = {};
@@ -128,10 +128,10 @@ export default class NetworkMasterCluster extends MasterCluster {
 
         let array = [];
         if (this.clientsCluster)
-            array.push( this.clientsCluster.broadcastAsync(name, data, timeout, senderSockets) );
+            array.push( this.clientsCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets) );
 
         if (this.serverCluster)
-            array.push( this.serverCluster.broadcastAsync(name, data, timeout, senderSockets) );
+            array.push( this.serverCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets) );
 
         array = await Promise.all(array);
 

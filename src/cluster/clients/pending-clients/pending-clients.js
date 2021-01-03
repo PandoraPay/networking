@@ -38,7 +38,7 @@ export default class PendingClients {
 
         if (!this._scope.db) return;
 
-        if ( this._scope.masterCluster.isMasterCluster || !this._scope.db.isSynchronized) {
+        if ( this._scope.masterCluster.isMaster || !this._scope.db.isSynchronized) {
 
             //clear the pending queue
             await this._clearPendingQueue();

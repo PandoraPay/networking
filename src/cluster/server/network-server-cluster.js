@@ -23,20 +23,20 @@ export default class NetworkServerCluster extends ServerCluster {
 
 	}
 
-	broadcast(name, data, senderSockets){
+	broadcastToSockets(name, data, senderSockets){
 
 		if (!this.httpServer) return 0;
 
-		return this.httpServer.broadcast(name, data, senderSockets) + this.serverSocket.broadcast(name, data, senderSockets);
+		return this.httpServer.broadcastToSockets(name, data, senderSockets) + this.serverSocket.broadcastToSockets(name, data, senderSockets);
 
 	}
 
-	async broadcastAsync(name, data, timeout, senderSockets){
+	async broadcastToSocketsAsync(name, data, timeout, senderSockets){
 		if (!this.httpServer) return [];
 
 		const out = await Promise.all([
-			this.httpServer.broadcastAsync(name, data, timeout, senderSockets),
-			this.serverSocket.broadcastAsync(name, data, timeout, senderSockets),
+			this.httpServer.broadcastToSocketsAsync(name, data, timeout, senderSockets),
+			this.serverSocket.broadcastToSocketsAsync(name, data, timeout, senderSockets),
 		]);
 
 		return out[0].concat(out[1]);
