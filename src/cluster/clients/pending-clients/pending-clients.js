@@ -1,6 +1,7 @@
 import ipAddress from "src/network/ip-address"
 
 const {Exception, BufferHelper } = global.kernel.helpers;
+const {DBSchemaHelper} = global.kernel.marshal.db;
 
 import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
 import NetworkClientSocketRouter from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket-router';
@@ -9,7 +10,6 @@ import NodeConnectionTypeEnum from "../../schemas/types/node-connection-type-enu
 
 import ConnectingNodeSchema from "./schemas/connecting-node-schema";
 import ConnectedNodeSchema from "./schemas/connected-node-schema";
-
 
 export default class PendingClients {
 
@@ -22,6 +22,8 @@ export default class PendingClients {
         };
 
         this._started = false;
+
+        this._ConnectingNodeSchemaLight = DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true } );
 
     }
 
@@ -89,7 +91,7 @@ export default class PendingClients {
 
             do{
 
-                nodesQueueIds = await ConnectingNodeSchema.findAll( this._scope.db );
+                nodesQueueIds = await this._scope.db.scan( this._ConnectingNodeSchemaLight, it, 10);
 
                 await Promise.all( nodesQueueIds.map( async it => {
 

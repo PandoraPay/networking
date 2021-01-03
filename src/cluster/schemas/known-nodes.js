@@ -1,5 +1,6 @@
 import ConnectedNodeSchema from "../clients/pending-clients/schemas/connected-node-schema";
 import ConnectingNodeSchema from "../clients/pending-clients/schemas/connecting-node-schema";
+import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
 
 const {Helper} = global.kernel.helpers;
 const {DBSchemaHelper} = global.kernel.marshal.db;
@@ -59,8 +60,14 @@ export default class KnownNodes {
 
         try{
 
-            const connectedNodes =  await this._scope.db.findBySort( DBSchemaHelper.onlyProperties( ConnectedNodeSchema,  { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true } ), "scoreClientsConsensus", 0, 1000,  );
-            const connectingNodes = await this._scope.db.findBySort( DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true } ), "scoreClientsConsensus", 0, 1000,  );
+            let connectedNodes =  await this._scope.db.scan( DBSchemaHelper.onlyProperties( ConnectedNodeSchema,  { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true, serverAddress: true, } ), 0, 1000,  );
+            let connectingNodes = await this._scope.db.scan( DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true } ), 0, 1000,  );
+
+            connectedNodes.sort( (a,b) => b.score - a.score );
+            connectedNodes = connectedNodes.filter( node => node.consensus === NodeConsensusTypeEnum.nodeConsensus && node.serverAddress !== "0.0.0.0:0" )
+
+            connectingNodes.sort( (a,b) => b.score - a.score );
+            connectingNodes = connectingNodes.filter( node => node.consensus === NodeConsensusTypeEnum.nodeConsensus  )
 
             if (connectedNodes.length > 0 || connectingNodes.length > 0){
 
