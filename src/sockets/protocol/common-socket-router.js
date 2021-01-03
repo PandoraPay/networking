@@ -101,8 +101,6 @@ export default class CommonSocketRouter extends SocketsRouter{
 
     _stats( consensusType = this._scope.masterCluster.consensusType ){
 
-
-
         return {
             short: this._scope.argv.settings.applicationShort,
 
@@ -181,6 +179,7 @@ export default class CommonSocketRouter extends SocketsRouter{
             version: handshake.build,
             networkType: parseInt(handshake.net.type),
             address: addr,
+            consensus,
         };
 
     }

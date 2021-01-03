@@ -68,6 +68,8 @@ export default class NetworkClientSocket extends BasicSocket {
                 handshake.address = this.address.toString();
                 this.handshake = handshake;
 
+                this.serverAddress = ipAddress.create( handshake.address );
+
                 this.socketInitialized();
 
                 resolve(true);

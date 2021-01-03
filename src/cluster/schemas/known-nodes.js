@@ -64,10 +64,10 @@ export default class KnownNodes {
             let connectingNodes = await this._scope.db.scan( DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true } ), 0, 1000,  );
 
             connectedNodes.sort( (a,b) => b.score - a.score );
-            connectedNodes = connectedNodes.filter( node => node.consensus === NodeConsensusTypeEnum.nodeConsensus && node.serverAddress !== "0.0.0.0:0" )
+            connectedNodes = connectedNodes.filter( node => node.consensus === NodeConsensusTypeEnum.CONSENSUS_FULL && node.serverAddress !== "0.0.0.0:0" )
 
             connectingNodes.sort( (a,b) => b.score - a.score );
-            connectingNodes = connectingNodes.filter( node => node.consensus === NodeConsensusTypeEnum.nodeConsensus  )
+            connectingNodes = connectingNodes.filter( node => node.consensus === NodeConsensusTypeEnum.CONSENSUS_FULL  )
 
             if (connectedNodes.length > 0 || connectingNodes.length > 0){
 

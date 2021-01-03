@@ -88,6 +88,7 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
 
             ...this._getData(),
             ...client.handshake,
+            serverAddress: client.serverAddress.toString(),
 
         } );
 
