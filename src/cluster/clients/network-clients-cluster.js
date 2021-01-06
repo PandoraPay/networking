@@ -75,7 +75,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 			 */
 			address = clientSocket.address.toString( false, false, false);
 
-			if (this.list[address])
+			if ( this.list[address] )
 				throw new Exception(this, "client already connected");
 
 			this.list[address] = clientSocket;

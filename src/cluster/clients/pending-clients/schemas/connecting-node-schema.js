@@ -38,6 +38,26 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
         this.connectedNode = undefined;
         this.client = undefined;
 
+        this.save = this._save;
+        this.delete = this._delete;
+    }
+
+    async _save(){
+
+        if (!this.pendingMap[this.id]){
+            this.pendingMap[this.id] = this;
+            this.pendingList.push(this);
+        }
+
+    }
+
+    async _delete(){
+
+        if (this.pendingMap){
+            delete this.pendingMap[this.id];
+            this.pendingList.splice( this.pendingList.indexOf(this), 1);
+        }
+
     }
 
     /**

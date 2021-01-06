@@ -1,7 +1,6 @@
 import ipAddress from "src/network/ip-address"
 
 const {Exception, BufferHelper } = global.kernel.helpers;
-const {DBSchemaHelper} = global.kernel.marshal.db;
 
 import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
 import NetworkClientSocketRouter from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket-router';
@@ -23,7 +22,17 @@ export default class PendingClients {
 
         this._started = false;
 
-        this._ConnectingNodeSchemaLight = DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true } );
+        this._resetPendingClients();
+
+    }
+
+    _resetPendingClients(){
+
+        this._pendingList = [];
+        this._pendingMap = {};
+
+        this._connectedList = [];
+        this._connectedMap = {};
 
     }
 
@@ -31,6 +40,11 @@ export default class PendingClients {
 
         if (this._init) return true;
         this._init = true;
+
+        this._clientSocketRouter = new this._scope.ClientSocketRouter( {
+            ...this._scope,
+            socketType: "clientSocket",
+        });
 
         /**
          * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
@@ -53,10 +67,6 @@ export default class PendingClients {
         if (this._started) return true;
         this._started = true;
 
-        this._clientSocketRouter = new this._scope.ClientSocketRouter( {
-            ...this._scope,
-            socketType: "clientSocket",
-        });
 
         this._scope.masterCluster.on("ready-master!", data =>{
 
@@ -83,56 +93,50 @@ export default class PendingClients {
 
     async _connectPendingClients(){
 
-        let it = 0;
+        const nodesQueueIds = this._pendingList;
 
         try{
 
-            let nodesQueueIds;
+            nodesQueueIds.sort( (a,b) => b.score - a.score );
 
-            do{
+            for (let i=0; i < nodesQueueIds.length; i++) {
 
-                nodesQueueIds = await this._scope.db.scan( this._ConnectingNodeSchemaLight, it, 10);
+                const nodeQueue = nodesQueueIds[i];
 
-                await Promise.all( nodesQueueIds.map( async it => {
+                const ip = ipAddress.create( nodeQueue.id );
+                if ( this._scope.bansManager.checkBan("client", ip.toString() ) )
+                    return;
 
-                    const ip = ipAddress.create( it.id );
-                    if ( this._scope.bansManager.checkBan("client", ip.toString() ) )
-                        return;
+                let lock = !this._scope.db.isSynchronized;
 
-                    const lock = await it.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
+                if (this._scope.db.isSynchronized)
+                    lock = await nodeQueue.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
 
-                    //lock acquired
-                    if (lock){
+                //lock acquired
+                if (lock){
 
-                        try {
+                    try {
 
-                            const nodeQueue = await this._scope.db.find( ConnectingNodeSchema, it.id, undefined, undefined, {scope: { pendingClients: this, clientSocketRouter: this._clientSocketRouter } });
+                        const clientSocket = await nodeQueue.connectClient( );
 
-                            const clientSocket = await nodeQueue.connectClient( );
+                        if (clientSocket && clientSocket.connected) {
 
-                            if (clientSocket && clientSocket.connected) {
-
-                                if (await this._scope.clientsCluster.clientSocketConnected(nodeQueue, clientSocket)) {
-                                    this._clientSocketRouter.initRoutes(clientSocket, clientSocket.on.bind(clientSocket), undefined, undefined, '', 'client-socket');
-                                    clientSocket.emit("ready!", "go!");
-                                }
-
+                            if (await this._scope.clientsCluster.clientSocketConnected(nodeQueue, clientSocket)) {
+                                this._clientSocketRouter.initRoutes(clientSocket, clientSocket.on.bind(clientSocket), undefined, undefined, '', 'client-socket');
+                                clientSocket.emit("ready!", "go!");
                             }
 
-                        } catch (err){
-                            this._scope.logger.error(this, "connecting to raised an error", err);
                         }
 
-                        //release lock
-                        if (typeof lock === "function" ) await lock();
+                    } catch (err){
+                        this._scope.logger.error(this, "connecting to raised an error", err);
                     }
 
-                }));
+                    //release lock
+                    if (typeof lock === "function" ) await lock();
+                }
 
-
-                it += 10;
-
-            } while ( nodesQueueIds.length === 10 )
+            }
 
         }catch (err){
             console.error(err);
@@ -163,16 +167,13 @@ export default class PendingClients {
      */
     async _clearPendingQueue(){
 
-        try{
-            await this._scope.db.deleteAll( ConnectingNodeSchema );
-        }catch(err){
-
-        }
+        this._pendingList = [];
+        this._pendingMap = {};
 
         const seedNodes = await this.getSeedNodes();
 
-        await Promise.all( seedNodes.map( it => this.addNodeToPendingQueue( {
-            ... it,
+        await Promise.all( seedNodes.map( seedNode => this.addNodeToPendingQueue( {
+            ...seedNode,
             connection:  NodeConnectionTypeEnum.connectionClientSocket,
             date: this._scope.argv.settings.getDateNow(),
             hash: BufferHelper.generateMaxBuffer(32),
@@ -188,11 +189,8 @@ export default class PendingClients {
 
             if (this._scope.argv.masterCluster.clientsCluster.pendingClients.convertConnectedNodesToQueueNodes) {
 
-                const list = await this._scope.db.findAll( ConnectedNodeSchema );
-
-                await Promise.all ( list.map( it => it.createConnectingNode() ) );
-                await Promise.all ( list.map( it => it ? it.save() : false ) );
-
+                await Promise.all ( this._connectedList.map( it => it.createConnectingNode() ) );
+                await Promise.all ( this._connectedList.map( it => it ? it.save() : false ) );
             }
 
         }catch (err){
@@ -231,10 +229,13 @@ export default class PendingClients {
              * save nodeQueue
              */
 
-            const nodeQueue = new ConnectingNodeSchema( this._scope, undefined, pendingConnection );
+            const nodeQueue = new ConnectingNodeSchema( {
+                ...this._scope,
+                clientSocketRouter: this._clientSocketRouter,
+            }, undefined, pendingConnection );
 
             let save = isSeedNode;
-            if (await nodeQueue.exists() === false) save = true;
+            if (!this._pendingMap[nodeQueue.id]) save = true;
 
             if (save)
                 await nodeQueue.save();

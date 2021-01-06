@@ -18,7 +18,6 @@ export default class BasicSocket {
 
         this.socket = socket;
 
-        this._disconnectedPromiseResolver = undefined;
     }
 
     set socket(newSocket){
@@ -36,16 +35,12 @@ export default class BasicSocket {
             timeOpen: new Date().getTime(),
         };
 
-        this.disconnectedPromise = new Promise( resolve =>  this._disconnectedPromiseResolver = resolve );
 
         this._scope.logger.log(this, "socketInitialized connected");
 
         this._socket.once("disconnect", ()=>{
 
             this._scope.logger.log(this, "socketInitialized disconnected");
-
-            if (this._disconnectedPromiseResolver)
-                this._disconnectedPromiseResolver(true);
 
             if (this.handshake) {
                 this._clearSubscriptions();
@@ -99,7 +94,6 @@ export default class BasicSocket {
         // Returns a race between our timeout and the passed in promise
         return Promise.race([
             promise,
-        //   this.disconnectedPromise //TODO this will cause memory leak for some reason
         ]);
     }
 
@@ -121,7 +115,6 @@ export default class BasicSocket {
 
         return Promise.race([
             promise,
-         //   this.disconnectedPromise //TODO this will cause memory leak for some reason
         ]);
     }
 

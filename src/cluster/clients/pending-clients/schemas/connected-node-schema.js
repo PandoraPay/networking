@@ -75,6 +75,24 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
     }
 
+    async save(){
+
+        if (!this.connectedMap[this.id]){
+            this.connectedMap[this.id] = this;
+            this.connectedList.push(this);
+        }
+
+    }
+
+    async delete(){
+
+        if (this.connectedMap){
+            delete this.connectedMap[this.id];
+            this.connectedList.splice(this.connectedList.indexOf(this), 1);
+        }
+
+    }
+
     async _increaseScore(){
 
         const newScore = this.score + 1;
@@ -156,7 +174,7 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
         } );
 
-        return connectingNode;
+        return connectingNode.save();
 
     }
 

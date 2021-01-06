@@ -36,7 +36,20 @@ export default class NodeScoreBaseSchema extends NodeBaseSchema {
 
     }
 
+    get pendingList(){
+        return this._scope.masterCluster.clientsCluster.pendingClients._pendingList;
+    }
+    get connectedList(){
+        return this._scope.masterCluster.clientsCluster.pendingClients._connectedList;
+    }
 
+    get pendingMap(){
+        return this._scope.masterCluster.clientsCluster.pendingClients._pendingMap;
+    }
+
+    get connectedMap(){
+        return this._scope.masterCluster.clientsCluster.pendingClients._connectedMap;
+    }
 
 }
 
