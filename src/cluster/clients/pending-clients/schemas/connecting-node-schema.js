@@ -9,7 +9,7 @@ import NodeScoreBaseSchema from "./base/node-score-base-schema";
 import NetworkClientSocket from "../client/websocket/network-client-socket";
 
 import NodeTypeEnum from "src/cluster/schemas/types/node-type-enum";
-import ipAddress from "../../../../network/ip-address";
+import ipAddress from "src/network/ip-address";
 
 /**
  * Schema element used to create a Sorted List 8with a queue to connect to consensus nodes
@@ -43,21 +43,11 @@ export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
     }
 
     async _save(){
-
-        if (!this.pendingMap[this.id]){
-            this.pendingMap[this.id] = this;
-            this.pendingList.push(this);
-        }
-
+        return this.pendingClients.insertConnectingNode(this, this.id, true);
     }
 
     async _delete(){
-
-        if (this.pendingMap){
-            delete this.pendingMap[this.id];
-            this.pendingList.splice( this.pendingList.indexOf(this), 1);
-        }
-
+        return this.pendingClients.removeConnectingNode( this.id, true);
     }
 
     /**

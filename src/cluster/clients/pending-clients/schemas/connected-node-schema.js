@@ -75,22 +75,12 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
     }
 
-    async save(){
-
-        if (!this.connectedMap[this.id]){
-            this.connectedMap[this.id] = this;
-            this.connectedList.push(this);
-        }
-
+    async _save(){
+        return this.pendingClients.insertConnectedNode(this, this.id, true);
     }
 
-    async delete(){
-
-        if (this.connectedMap){
-            delete this.connectedMap[this.id];
-            this.connectedList.splice(this.connectedList.indexOf(this), 1);
-        }
-
+    async _delete(){
+        return this.pendingClients.removeConnectedNode( this.id, true);
     }
 
     async _increaseScore(){

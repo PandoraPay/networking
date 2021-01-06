@@ -1,6 +1,7 @@
 import ipAddress from "src/network/ip-address"
 
 const {Exception, BufferHelper } = global.kernel.helpers;
+const {DBSchema} = global.kernel.marshal.db;
 
 import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
 import NetworkClientSocketRouter from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket-router';
@@ -22,14 +23,16 @@ export default class PendingClients {
 
         this._started = false;
 
+        this.dataSubscription = new DBSchema(this._scope, { fields: {  table: { default: "pendingClients", fixedBytes: 7 } }});
+
         this._resetPendingClients();
 
     }
 
     _resetPendingClients(){
 
-        this._pendingList = [];
-        this._pendingMap = {};
+        this._connectingList = [];
+        this._connectingMap = {};
 
         this._connectedList = [];
         this._connectedMap = {};
@@ -46,17 +49,95 @@ export default class PendingClients {
             socketType: "clientSocket",
         });
 
-        /**
-         * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
-         */
+        if ( this._scope.db.isSynchronized ) {
 
-        if (!this._scope.db) return;
+            await this.dataSubscription.subscribe();
 
-        if ( this._scope.masterCluster.isMaster || !this._scope.db.isSynchronized) {
+            this.dataSubscription.subscription.on( async message => {
 
-            //clear the pending queue
-            await this._clearPendingQueue();
-            await this._clearConnectedList();
+                if (message.name === "pending-clients/insert-connecting-node")
+                    await this.insertConnectingNode(message.data.connectingNode, message.data.id, false);
+                else if (message.name === "pending-clients/remove-connecting-node")
+                    await this.removeConnectingNode( message.data.id, false);
+                else if (message.name === "pending-clients/insert-connected-node")
+                    await this.insertConnectedNode(message.data, false);
+                else if (message.name === "pending-clients/remove-connected-node")
+                    await this.removeConnectedNode(message.data, false);
+
+            });
+        }
+
+    }
+
+    async insertConnectingNode(connectingNode, id, propagateToMasterCluster = true){
+
+        this._scope.logger.log(this,  'insertConnectingNode', {id, propagateToMasterCluster, exists:this._connectingMap[id] } );
+
+        if (!this._connectingMap[id]){
+
+            if (connectingNode instanceof ConnectingNodeSchema === false)
+                connectingNode = new ConnectingNodeSchema( this._scope, connectingNode );
+
+            this._connectingMap[connectingNode.id] = connectingNode;
+            this._connectingList.push(connectingNode);
+
+            if (propagateToMasterCluster && this._scope.db.isSynchronized )
+                await this.dataSubscription.subscribeMessage("pending-clients/insert-connecting-node", {
+                    connectingNode: connectingNode.toBuffer(),
+                    id: connectingNode.id,
+                }, true, false);
+
+        }
+
+    }
+
+    async removeConnectingNode( id, propagateToMasterCluster = true){
+
+        if (this._connectingMap[id]){
+
+            this._connectingList.splice( this._connectingList.indexOf(this._connectingMap[id]), 1);
+            delete this._connectingMap[id];
+
+            if (propagateToMasterCluster && this._scope.db.isSynchronized )
+                await this.dataSubscription.subscribeMessage("pending-clients/remove-connecting-node", {
+                    id: id,
+                }, true, false);
+
+        }
+
+    }
+
+    async insertConnectedNode(connectedNode, id, propagateToMasterCluster = true){
+
+        if (!this._connectedMap[id]){
+
+            if (connectedNode instanceof ConnectedNodeSchema === false)
+                connectedNode = new ConnectedNodeSchema( this._scope, connectedNode );
+
+            this._connectedMap[connectedNode.id] = connectedNode;
+            this._connectedList.push(connectedNode);
+
+            if (propagateToMasterCluster && this._scope.db.isSynchronized )
+                await this.dataSubscription.subscribeMessage("pending-clients/insert-connected-node", {
+                    connectedNode: connectedNode.toBuffer(),
+                    id: connectedNode.id,
+                }, true, false);
+
+        }
+
+    }
+
+    async removeConnectedNode(id, propagateTxMasterCluster = true){
+
+        if (this._connectedMap[id]){
+
+            this._connectedList.splice( this._connectedList.indexOf(this._connectedMap[id]), 1);
+            delete this._connectedMap[id];
+
+            if (propagateTxMasterCluster && this._scope.db.isSynchronized )
+                await this.dataSubscription.subscribeMessage("pending-clients/remove-connected-node", {
+                    id: id,
+                }, true, false);
 
         }
 
@@ -68,12 +149,27 @@ export default class PendingClients {
         this._started = true;
 
 
-        this._scope.masterCluster.on("ready-master!", data =>{
+        this._scope.masterCluster.on("ready-master!", async data =>{
 
             if ( !data.result ) return;
 
             if (!this._scope.heartBeat.existsProcess("connectingPendingClients"))
                 this._scope.heartBeat.addProcessAndTask("connectingPendingClients", this._connectPendingClientsInterval.bind(this), 1, "default", false);
+
+            /**
+             * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
+             */
+            this._scope.logger.log(this, 'isMaster')
+
+            if ( this._scope.masterCluster.isMaster || !this._scope.db.isSynchronized) {
+
+                this._scope.logger.log(this, 'isMaster2')
+
+                //clear the pending queue
+                await this._clearPendingQueue();
+                await this._clearConnectedList();
+
+            }
 
         });
 
@@ -93,35 +189,35 @@ export default class PendingClients {
 
     async _connectPendingClients(){
 
-        const nodesQueueIds = this._pendingList;
+        const connectingNodes = this._connectingList;
 
         try{
 
-            nodesQueueIds.sort( (a,b) => b.score - a.score );
+            connectingNodes.sort( (a,b) => b.score - a.score );
 
-            for (let i=0; i < nodesQueueIds.length; i++) {
+            for (let i=0; i < connectingNodes.length; i++) {
 
-                const nodeQueue = nodesQueueIds[i];
+                const connectingNode = connectingNodes[i];
 
-                const ip = ipAddress.create( nodeQueue.id );
+                const ip = ipAddress.create( connectingNode.address );
                 if ( this._scope.bansManager.checkBan("client", ip.toString() ) )
                     return;
 
                 let lock = !this._scope.db.isSynchronized;
 
                 if (this._scope.db.isSynchronized)
-                    lock = await nodeQueue.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
+                    lock = await connectingNode.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
 
                 //lock acquired
                 if (lock){
 
                     try {
 
-                        const clientSocket = await nodeQueue.connectClient( );
+                        const clientSocket = await connectingNode.connectClient( );
 
                         if (clientSocket && clientSocket.connected) {
 
-                            if (await this._scope.clientsCluster.clientSocketConnected(nodeQueue, clientSocket)) {
+                            if (await this._scope.clientsCluster.clientSocketConnected(connectingNode, clientSocket)) {
                                 this._clientSocketRouter.initRoutes(clientSocket, clientSocket.on.bind(clientSocket), undefined, undefined, '', 'client-socket');
                                 clientSocket.emit("ready!", "go!");
                             }
@@ -167,8 +263,8 @@ export default class PendingClients {
      */
     async _clearPendingQueue(){
 
-        this._pendingList = [];
-        this._pendingMap = {};
+        this._connectingList = [];
+        this._connectingMap = {};
 
         const seedNodes = await this.getSeedNodes();
 
@@ -187,11 +283,9 @@ export default class PendingClients {
 
         try{
 
-            if (this._scope.argv.masterCluster.clientsCluster.pendingClients.convertConnectedNodesToQueueNodes) {
-
+            if (this._scope.argv.masterCluster.clientsCluster.pendingClients.convertConnectedNodesToQueueNodes)
                 await Promise.all ( this._connectedList.map( it => it.createConnectingNode() ) );
-                await Promise.all ( this._connectedList.map( it => it ? it.save() : false ) );
-            }
+
 
         }catch (err){
             this._scope.logger.error(this, "Converting Connected Nodes To Queue Nodes raised an error", err);
@@ -235,10 +329,12 @@ export default class PendingClients {
             }, undefined, pendingConnection );
 
             let save = isSeedNode;
-            if (!this._pendingMap[nodeQueue.id]) save = true;
+            if (!this._connectingMap[nodeQueue.id]) save = true;
 
-            if (save)
+            if (save) {
+                this._scope.logger.log(this, nodeQueue.id);
                 await nodeQueue.save();
+            }
 
             return nodeQueue;
 

@@ -36,11 +36,11 @@ export default class BasicSocket {
         };
 
 
-        this._scope.logger.log(this, "socketInitialized connected");
+        this._scope.logger.warn(this, "socketInitialized connected");
 
         this._socket.once("disconnect", ()=>{
 
-            this._scope.logger.log(this, "socketInitialized disconnected");
+            this._scope.logger.warn(this, "socketInitialized disconnected");
 
             if (this.handshake) {
                 this._clearSubscriptions();

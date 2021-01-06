@@ -73,7 +73,7 @@ export default class NetworkClientsCluster extends ClientsCluster {
 			/**
 			 * checking if there is a duplicate connection
 			 */
-			address = clientSocket.address.toString( false, false, false);
+			address = clientSocket.address.toString( true, true, true );
 
 			if ( this.list[address] )
 				throw new Exception(this, "client already connected");
