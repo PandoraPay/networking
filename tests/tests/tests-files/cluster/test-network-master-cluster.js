@@ -12,7 +12,7 @@ export default function run (scope){
 
             await masterCluster.start();
 
-            if ( masterCluster.isMasterCluster ) { //master
+            if ( masterCluster.isMaster ) { //master
 
                 await Helper.waitUntilCondition( () => masterCluster.totalPeers.count === 2 *  this._scope.argv.masterCluster.workerCount , undefined, 55000 );
 
@@ -38,7 +38,7 @@ export default function run (scope){
 
             await masterCluster.start();
 
-            if ( masterCluster.isMasterCluster ) { //master
+            if ( masterCluster.isMaster ) { //master
 
                 await Helper.waitUntilCondition( () => masterCluster.totalPeers.count === 2 *  this._scope.argv.masterCluster.workerCount , undefined, 55000 );
 
@@ -50,9 +50,7 @@ export default function run (scope){
 
                 await Helper.waitUntilCondition( () => masterCluster.totalPeers.count === 2 *  this._scope.argv.masterCluster.workerCount , undefined, 55000 );
 
-                await asyncTimeout( ()=>{
-                    //nothing
-                }, 1000);
+                await asyncTimeout( ()=>{ }, 1000);
 
                 process.exit(1);
 

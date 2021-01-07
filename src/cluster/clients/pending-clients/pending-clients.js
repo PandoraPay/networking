@@ -60,9 +60,9 @@ export default class PendingClients {
                 else if (message.name === "pending-clients/remove-connecting-node")
                     await this.removeConnectingNode( message.data.id, false);
                 else if (message.name === "pending-clients/insert-connected-node")
-                    await this.insertConnectedNode(message.data, false);
+                    await this.insertConnectedNode(message.data.connectedNode, message.data.id, false);
                 else if (message.name === "pending-clients/remove-connected-node")
-                    await this.removeConnectedNode(message.data, false);
+                    await this.removeConnectedNode(message.data.id, false);
 
             });
         }
@@ -71,12 +71,10 @@ export default class PendingClients {
 
     async insertConnectingNode(connectingNode, id, propagateToMasterCluster = true){
 
-        this._scope.logger.log(this,  'insertConnectingNode', {id, propagateToMasterCluster, exists:this._connectingMap[id] } );
-
         if (!this._connectingMap[id]){
 
             if (connectingNode instanceof ConnectingNodeSchema === false)
-                connectingNode = new ConnectingNodeSchema( this._scope, connectingNode );
+                connectingNode = new ConnectingNodeSchema( this._scope, null, connectingNode );
 
             this._connectingMap[connectingNode.id] = connectingNode;
             this._connectingList.push(connectingNode);
@@ -112,7 +110,7 @@ export default class PendingClients {
         if (!this._connectedMap[id]){
 
             if (connectedNode instanceof ConnectedNodeSchema === false)
-                connectedNode = new ConnectedNodeSchema( this._scope, connectedNode );
+                connectedNode = new ConnectedNodeSchema( this._scope, null, connectedNode );
 
             this._connectedMap[connectedNode.id] = connectedNode;
             this._connectedList.push(connectedNode);
@@ -159,17 +157,12 @@ export default class PendingClients {
             /**
              * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
              */
-            this._scope.logger.log(this, 'isMaster')
 
-            if ( this._scope.masterCluster.isMaster || !this._scope.db.isSynchronized) {
 
-                this._scope.logger.log(this, 'isMaster2')
+            //clear the pending queue
+            await this._clearPendingQueue();
+            await this._clearConnectedList();
 
-                //clear the pending queue
-                await this._clearPendingQueue();
-                await this._clearConnectedList();
-
-            }
 
         });
 
@@ -199,17 +192,20 @@ export default class PendingClients {
 
                 const connectingNode = connectingNodes[i];
 
-                const ip = ipAddress.create( connectingNode.address );
-                if ( this._scope.bansManager.checkBan("client", ip.toString() ) )
+                if ( this._scope.bansManager.checkBan("client", connectingNode.address ) )
                     return;
 
                 let lock = !this._scope.db.isSynchronized;
 
+
                 if (this._scope.db.isSynchronized)
                     lock = await connectingNode.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
 
+
                 //lock acquired
                 if (lock){
+
+                    this._scope.logger.info( this, 'locking done', { connectingNode: connectingNode.id, lock: !!lock } );
 
                     try {
 
@@ -295,7 +291,8 @@ export default class PendingClients {
 
             //clear all connected nodes
             if (this._scope.argv.masterCluster.clientsCluster.pendingClients.deleteConnectedNodes)
-                await this._scope.db.deleteAll( ConnectedNodeSchema );
+                for (const key in this._connectedMap)
+                    await this.removeConnectedNode(key, true);
 
         } catch (err){
             this._scope.logger.error(this, "Deleting Connected Nodes raised an error", err);
@@ -331,10 +328,9 @@ export default class PendingClients {
             let save = isSeedNode;
             if (!this._connectingMap[nodeQueue.id]) save = true;
 
-            if (save) {
-                this._scope.logger.log(this, nodeQueue.id);
+            if (save)
                 await nodeQueue.save();
-            }
+
 
             return nodeQueue;
 

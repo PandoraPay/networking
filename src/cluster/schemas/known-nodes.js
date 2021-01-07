@@ -60,13 +60,10 @@ export default class KnownNodes {
 
         try{
 
-            let connectedNodes =  await this._scope.db.scan( DBSchemaHelper.onlyProperties( ConnectedNodeSchema,  { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true, serverAddress: true, } ), 0, 1000,  );
-            let connectingNodes = await this._scope.db.scan( DBSchemaHelper.onlyProperties( ConnectingNodeSchema, { id: true, table: true, score: true, address: true, build: true, node: true, consensus: true } ), 0, 1000,  );
-
-            connectedNodes.sort( (a,b) => b.score - a.score );
+            let connectedNodes = this._scope.masterCluster.clientsCluster.pendingClients._connectedList.sort( (a,b) => b.score - a.score );
             connectedNodes = connectedNodes.filter( node => node.consensus === NodeConsensusTypeEnum.CONSENSUS_FULL && node.serverAddress !== "0.0.0.0:0" )
 
-            connectingNodes.sort( (a,b) => b.score - a.score );
+            let connectingNodes = this._scope.masterCluster.clientsCluster.pendingClients._connectingList.sort( (a,b) => b.score - a.score );
             connectingNodes = connectingNodes.filter( node => node.consensus === NodeConsensusTypeEnum.CONSENSUS_FULL  )
 
             if (connectedNodes.length > 0 || connectingNodes.length > 0){
