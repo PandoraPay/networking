@@ -104,13 +104,12 @@ export default class TotalPeers extends DBSchema{
             });
 
         } catch (err){
-
+            this._scope.logger.error(this, err);
         }
 
-        await lock(); // release lock
+        if (typeof lock === "function") await lock(); // release lock
+
         return true;
-
-
     }
 
 }

@@ -72,7 +72,8 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
         }
 
-
+        this.save = this._save;
+        this.delete = this._delete;
     }
 
     async _save(){

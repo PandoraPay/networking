@@ -1,7 +1,6 @@
 import NodeConnectionTypeEnum from "src/cluster/schemas/types/node-connection-type-enum";
 import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
 
-const {DBSchema} = global.kernel.marshal.db;
 const {Helper} = global.kernel.helpers;
 
 import ConnectedNodeSchema from "./connected-node-schema";
