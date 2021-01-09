@@ -1,10 +1,5 @@
-import ipAddress from "src/network/ip-address"
-
 const {Exception, BufferHelper } = global.kernel.helpers;
 const {DBSchema} = global.kernel.marshal.db;
-
-import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
-import NetworkClientSocketRouter from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket-router';
 
 import NodeConnectionTypeEnum from "../../schemas/types/node-connection-type-enum"
 
@@ -15,12 +10,7 @@ export default class PendingClients {
 
     constructor(scope) {
 
-        this._scope = {
-            ClientSocket: NetworkClientSocket,
-            ClientSocketRouter: NetworkClientSocketRouter,
-            ...scope,
-        };
-
+        this._scope = scope;
         this._started = false;
 
         this.dataSubscription = new DBSchema(this._scope, { fields: {  table: { default: "pendingClients", fixedBytes: 7 } }});
@@ -43,11 +33,6 @@ export default class PendingClients {
 
         if (this._init) return true;
         this._init = true;
-
-        this._clientSocketRouter = new this._scope.ClientSocketRouter( {
-            ...this._scope,
-            socketType: "clientSocket",
-        });
 
         if ( this._scope.db.isSynchronized ) {
 
@@ -210,7 +195,7 @@ export default class PendingClients {
                         if (clientSocket && clientSocket.connected) {
 
                             if (await this._scope.clientsCluster.clientSocketConnected(connectingNode, clientSocket)) {
-                                this._clientSocketRouter.initRoutes(clientSocket, clientSocket.on.bind(clientSocket), undefined, undefined, '', 'client-socket');
+                                this._scope.clientSocketRouter.initRoutes(clientSocket, clientSocket.on.bind(clientSocket), undefined, undefined, '', 'client-socket');
                                 clientSocket.emit("ready!", "go!");
                             }
 
@@ -316,10 +301,7 @@ export default class PendingClients {
              * save nodeQueue
              */
 
-            const nodeQueue = new ConnectingNodeSchema( {
-                ...this._scope,
-                clientSocketRouter: this._clientSocketRouter,
-            }, undefined, pendingConnection );
+            const nodeQueue = new ConnectingNodeSchema( this._scope, undefined, pendingConnection );
 
             let save = isSeedNode;
             if (!this._connectingMap[nodeQueue.id]) save = true;

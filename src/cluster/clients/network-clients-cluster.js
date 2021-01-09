@@ -1,4 +1,6 @@
 import PendingClients from "./pending-clients/pending-clients";
+import NetworkClientSocketRouter from "./pending-clients/client/websocket/network-client-socket-router";
+import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
 
 
 const {ClientsCluster} = global.kernel.masterCluster;
@@ -11,13 +13,21 @@ export default class NetworkClientsCluster extends ClientsCluster {
 		super();
 
 		this._scope = scope = {
+			ClientSocket: NetworkClientSocket,
+			ClientSocketRouter: NetworkClientSocketRouter,
 			PendingClients: PendingClients,
 			...scope,
 		};
 
+		this.clientSocketRouter = new this._scope.ClientSocketRouter( {
+			...scope,
+			socketType: "clientSocket",
+		});
+
 		this.pendingClients = new scope.PendingClients({
 			...scope,
 			clientsCluster: this,
+			clientSocketRouter: this.clientSocketRouter,
 		});
 
 		/**
