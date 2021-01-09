@@ -147,7 +147,7 @@ export default class NetworkServerSocket extends server {
              */
 
             if (this._serverClientSocketRouter)
-                this._serverClientSocketRouter.initRoutes( newServerClientSocket, newServerClientSocket.on.bind(newServerClientSocket), undefined, undefined, '', 'serve-socket');
+                this._serverClientSocketRouter.initRoutes( newServerClientSocket, newServerClientSocket.on.bind(newServerClientSocket), undefined, undefined, '', 'server-socket');
 
             newServerClientSocket.emit("handshake", this._serverClientSocketRouter.handshake( this._scope.masterCluster.consensusType ) );
 

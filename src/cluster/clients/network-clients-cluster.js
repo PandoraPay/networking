@@ -19,15 +19,9 @@ export default class NetworkClientsCluster extends ClientsCluster {
 			...scope,
 		};
 
-		this.clientSocketRouter = new this._scope.ClientSocketRouter( {
-			...scope,
-			socketType: "clientSocket",
-		});
-
 		this.pendingClients = new scope.PendingClients({
 			...scope,
 			clientsCluster: this,
-			clientSocketRouter: this.clientSocketRouter,
 		});
 
 		/**
@@ -47,6 +41,12 @@ export default class NetworkClientsCluster extends ClientsCluster {
 
 		if (this._init) return true;
 		this._init = true;
+
+		this.clientSocketRouter = new this._scope.ClientSocketRouter( {
+			...this._scope,
+			socketType: "clientSocket",
+		});
+		this.pendingClients._scope.clientSocketRouter = this.clientSocketRouter;
 
 		await this.pendingClients.init();
 
