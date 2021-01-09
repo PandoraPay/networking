@@ -67,6 +67,22 @@ export default class PendingClients {
             });
         }
 
+        this._scope.masterCluster.startedPromise.then( async answer => {
+
+            if (!this._scope.heartBeat.existsProcess("connectingPendingClients"))
+                this._scope.heartBeat.addProcessAndTask("connectingPendingClients", this._connectPendingClientsInterval.bind(this), 1, "default", false);
+
+            /**
+             * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
+             */
+
+            //clear the pending queue
+            await this._clearPendingQueue();
+            await this._clearConnectedList();
+
+
+        });
+
     }
 
     async insertConnectingNode(connectingNode, id, propagateToMasterCluster = true){
@@ -145,26 +161,6 @@ export default class PendingClients {
 
         if (this._started) return true;
         this._started = true;
-
-
-        this._scope.masterCluster.on("ready-master!", async data =>{
-
-            if ( !data.result ) return;
-
-            if (!this._scope.heartBeat.existsProcess("connectingPendingClients"))
-                this._scope.heartBeat.addProcessAndTask("connectingPendingClients", this._connectPendingClientsInterval.bind(this), 1, "default", false);
-
-            /**
-             * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
-             */
-
-
-            //clear the pending queue
-            await this._clearPendingQueue();
-            await this._clearConnectedList();
-
-
-        });
 
     }
 
