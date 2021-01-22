@@ -44,9 +44,7 @@ export default class TotalPeers extends DBSchema{
 
     async start(){
 
-        await this.subscribe();
-
-        this.subscription.on( message => {
+        this._scope.masterCluster.on("total-peers/update",message => {
 
             if (message.except && message.except === this._scope.masterCluster.workerName) return;
 
@@ -97,11 +95,12 @@ export default class TotalPeers extends DBSchema{
             if (this.count > 0 && this.client > 0 && this.server > 0)
                 await this.save();
 
-            await this.subscription.emit({
+            await this._scope.masterCluster.sendMessage("total-peers/update", {
                 name: client ? "update-client" : "update-server",
                 count: client ? client : server,
                 except: this._scope.masterCluster.workerName,
-            });
+            }, true, false );
+
 
         } catch (err){
             this._scope.logger.error(this, err);

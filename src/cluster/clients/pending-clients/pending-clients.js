@@ -13,8 +13,6 @@ export default class PendingClients {
         this._scope = scope;
         this._started = false;
 
-        this.dataSubscription = new DBSchema(this._scope, { fields: {  table: { default: "pendingClients", fixedBytes: 7 } }});
-
         this._resetPendingClients();
 
     }
@@ -36,18 +34,16 @@ export default class PendingClients {
 
         if ( this._scope.db.isSynchronized ) {
 
-            await this.dataSubscription.subscribe();
+            this._scope.masterCluster.on(  "pending-clients",async data => {
 
-            this.dataSubscription.subscription.on( async message => {
-
-                if (message.name === "pending-clients/insert-connecting-node")
-                    await this.insertConnectingNode(message.data.connectingNode, message.data.id, false);
-                else if (message.name === "pending-clients/remove-connecting-node")
-                    await this.removeConnectingNode( message.data.id, false);
-                else if (message.name === "pending-clients/insert-connected-node")
-                    await this.insertConnectedNode(message.data.connectedNode, message.data.id, false);
-                else if (message.name === "pending-clients/remove-connected-node")
-                    await this.removeConnectedNode(message.data.id, false);
+                if (data.name === "pending-clients/insert-connecting-node")
+                    await this.insertConnectingNode(data.connectingNode, data.id, false);
+                else if (data.name === "pending-clients/remove-connecting-node")
+                    await this.removeConnectingNode( data.id, false);
+                else if (data.name === "pending-clients/insert-connected-node")
+                    await this.insertConnectedNode(data.connectedNode, data.id, false);
+                else if (data.name === "pending-clients/remove-connected-node")
+                    await this.removeConnectedNode(data.id, false);
 
             });
         }
@@ -65,7 +61,6 @@ export default class PendingClients {
             await this._clearPendingQueue();
             await this._clearConnectedList();
 
-
         });
 
     }
@@ -81,7 +76,8 @@ export default class PendingClients {
             this._connectingList.push(connectingNode);
 
             if (propagateToMasterCluster && this._scope.db.isSynchronized )
-                await this.dataSubscription.subscribeMessage("pending-clients/insert-connecting-node", {
+                await this._scope.masterCluster.sendMessage( "pending-clients", {
+                    name: "pending-clients/insert-connecting-node",
                     connectingNode: connectingNode.toBuffer(),
                     id: connectingNode.id,
                 }, true, false);
@@ -98,7 +94,8 @@ export default class PendingClients {
             delete this._connectingMap[id];
 
             if (propagateToMasterCluster && this._scope.db.isSynchronized )
-                await this.dataSubscription.subscribeMessage("pending-clients/remove-connecting-node", {
+                await this._scope.masterCluster.sendMessage("pending-clients", {
+                    name: "pending-clients/remove-connecting-node",
                     id: id,
                 }, true, false);
 
@@ -117,7 +114,8 @@ export default class PendingClients {
             this._connectedList.push(connectedNode);
 
             if (propagateToMasterCluster && this._scope.db.isSynchronized )
-                await this.dataSubscription.subscribeMessage("pending-clients/insert-connected-node", {
+                await this._scope.masterCluster.sendMessage("pending-clients", {
+                    name: "pending-clients/insert-connected-node",
                     connectedNode: connectedNode.toBuffer(),
                     id: connectedNode.id,
                 }, true, false);
@@ -134,7 +132,8 @@ export default class PendingClients {
             delete this._connectedMap[id];
 
             if (propagateTxMasterCluster && this._scope.db.isSynchronized )
-                await this.dataSubscription.subscribeMessage("pending-clients/remove-connected-node", {
+                await this._scope.masterCluster.sendMessage("pending-clients", {
+                    name: "pending-clients/remove-connected-node",
                     id: id,
                 }, true, false);
 
@@ -178,10 +177,8 @@ export default class PendingClients {
 
                 let lock = !this._scope.db.isSynchronized;
 
-
                 if (this._scope.db.isSynchronized)
                     lock = await connectingNode.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
-
 
                 //lock acquired
                 if (lock){

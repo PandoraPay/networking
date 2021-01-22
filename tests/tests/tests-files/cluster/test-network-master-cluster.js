@@ -24,7 +24,7 @@ export default function run (scope){
 
                 await Helper.waitUntilCondition( () => masterCluster.totalPeers.count === 2 *  this._scope.argv.masterCluster.workerCount , undefined, 55000 );
 
-                await asyncTimeout( ()=>{ }, 1000);
+                await Helper.sleep(5000);
 
                 process.exit(1);
 
@@ -50,7 +50,7 @@ export default function run (scope){
 
                 await Helper.waitUntilCondition( () => masterCluster.totalPeers.count === 2 *  this._scope.argv.masterCluster.workerCount , undefined, 55000 );
 
-                await asyncTimeout( ()=>{ }, 1000);
+                await Helper.sleep(1000);
 
                 process.exit(1);
 
