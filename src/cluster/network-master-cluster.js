@@ -1,15 +1,15 @@
 
-const {MasterCluster} = global.kernel.masterCluster;
-const {Helper} = global.kernel.helpers;
+const {MasterCluster} = require('kernel').masterCluster;
+const {Helper} = require('kernel').helpers;
 
-const NetworkServerCluster = BROWSER ? undefined : require("./server/network-server-cluster").default;
+const NetworkServerCluster = BROWSER ? undefined : require("./server/network-server-cluster");
 
-import NetworkClientsCluster from "./clients/network-clients-cluster"
-import TotalPeers from "./schemas/total-peers";
-import KnownNodes from "./schemas/known-nodes";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const NetworkClientsCluster = require( "./clients/network-clients-cluster" )
+const TotalPeers = require( "./schemas/total-peers");
+const KnownNodes = require( "./schemas/known-nodes");
+const NodeConsensusTypeEnum = require( "./schemas/types/node-consensus-type-enum")
 
-export default class NetworkMasterCluster extends MasterCluster {
+module.exports = class NetworkMasterCluster extends MasterCluster {
 
     constructor(scope){
 

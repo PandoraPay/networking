@@ -1,7 +1,7 @@
-import NodeTypeEnum from "src/cluster/schemas/types/node-type-enum";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum";
+const NodeTypeEnum = require("../../../../../../../src/cluster/schemas/types/node-type-enum");
+const NodeConsensusTypeEnum = require( "../../../../../../../src/cluster/schemas/types/node-consensus-type-enum");
 
-export default {
+module.exports = {
 
     /**
      * all nodes are connected to the localhost master cluster

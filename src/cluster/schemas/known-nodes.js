@@ -1,13 +1,11 @@
-import ConnectedNodeSchema from "../clients/pending-clients/schemas/connected-node-schema";
-import ConnectingNodeSchema from "../clients/pending-clients/schemas/connecting-node-schema";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const NodeConsensusTypeEnum = require( "../schemas/types/node-consensus-type-enum" )
 
-const {Helper} = global.kernel.helpers;
-const {DBSchemaHelper} = global.kernel.marshal.db;
+const {Helper} = require('kernel').helpers;
+const {DBSchemaHelper} = require('kernel').marshal.db;
 
-const  {setAsyncInterval, clearAsyncInterval} = global.kernel.helpers.AsyncInterval;
+const  {setAsyncInterval, clearAsyncInterval} = require('kernel').helpers.AsyncInterval;
 
-export default class KnownNodes {
+module.exports = class KnownNodes {
 
     constructor(scope) {
         this._scope = scope;

@@ -1,11 +1,11 @@
-import NodeTypeEnum from "src/cluster/schemas/types/node-type-enum"
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const NodeTypeEnum = require("../../../../../../src/cluster/schemas/types/node-type-enum")
+const NodeConsensusTypeEnum = require("../../../../../../src/cluster/schemas/types/node-consensus-type-enum")
 
 /**
  * Arguments for Seed Nodes
  */
 
-export default {
+module.exports = {
 
     review: "15/07/2017",
 

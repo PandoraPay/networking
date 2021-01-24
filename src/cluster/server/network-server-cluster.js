@@ -1,15 +1,15 @@
 
-const {ServerCluster} = global.kernel.masterCluster;
+const {ServerCluster} = require('kernel').masterCluster;
 
-import NetworkHttpServer from "./http-server/network-http-server";
-import NetworkServerSocket from "./websocket/network-server-socket";
+const NetworkHttpServer = require("./http-server/network-http-server");
+const NetworkServerSocket = require("./websocket/network-server-socket");
 
 /**
  * scope
  *          argv, logger, db, masterCluster
  */
 
-export default class NetworkServerCluster extends ServerCluster {
+module.exports = class NetworkServerCluster extends ServerCluster {
 
 	constructor(scope)	{
 

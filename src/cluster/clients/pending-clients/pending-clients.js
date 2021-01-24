@@ -1,12 +1,12 @@
-const {Exception, BufferHelper } = global.kernel.helpers;
-const {DBSchema} = global.kernel.marshal.db;
+const {Exception, BufferHelper } = require('kernel').helpers;
+const {DBSchema} = require('kernel').marshal.db;
 
-import NodeConnectionTypeEnum from "../../schemas/types/node-connection-type-enum"
+const NodeConnectionTypeEnum = require( "../../schemas/types/node-connection-type-enum" )
 
-import ConnectingNodeSchema from "./schemas/connecting-node-schema";
-import ConnectedNodeSchema from "./schemas/connected-node-schema";
+const ConnectingNodeSchema = require( "./schemas/connecting-node-schema");
+const ConnectedNodeSchema = require( "./schemas/connected-node-schema");
 
-export default class PendingClients {
+module.exports = class PendingClients {
 
     constructor(scope) {
 
@@ -200,10 +200,11 @@ export default class PendingClients {
 
                     } catch (err){
                         this._scope.logger.error(this, "connecting to raised an error", err);
+                    }finally{
+                        //release lock
+                        if (typeof lock === "function" ) await lock();
                     }
 
-                    //release lock
-                    if (typeof lock === "function" ) await lock();
                 }
 
             }
@@ -258,7 +259,7 @@ export default class PendingClients {
         try{
 
             if (this._scope.argv.masterCluster.clientsCluster.pendingClients.convertConnectedNodesToQueueNodes)
-                await Promise.all ( this._connectedList.map( it => it.createConnectingNode() ) );
+                await Promise.all ( this._connectedList.map( it => it.createConnectingNode(ConnectingNodeSchema) ) );
 
 
         }catch (err){
@@ -301,7 +302,7 @@ export default class PendingClients {
             const nodeQueue = new ConnectingNodeSchema( this._scope, undefined, pendingConnection );
 
             let save = isSeedNode;
-            if (!this._connectingMap[nodeQueue.id]) save = true;
+            if (!this._connectedMap[nodeQueue.id] && !this._connectingMap[nodeQueue.id]) save = true;
 
             if (save)
                 await nodeQueue.save();

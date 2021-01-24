@@ -1,12 +1,12 @@
-import ArgvPendingClients from "./modules/argv-pending-clients"
-import ArgvSeedNodes from "./modules/argv-seed-nodes"
-import ArgvClientSocket from "./modules/argv-client-socket";
+const ArgvPendingClients = require( "./modules/argv-pending-clients")
+const ArgvSeedNodes = require("./modules/argv-seed-nodes")
+const ArgvClientSocket = require("./modules/argv-client-socket");
 
 /**
  * Arguments for Clients Cluster
  */
 
-export default {
+module.exports = {
 
     createWorkers: true,
 

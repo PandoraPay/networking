@@ -1,12 +1,11 @@
-const {Helper, EnumHelper} = global.kernel.helpers;
+const {Helper, EnumHelper} = require('kernel').helpers;
 
-import ConnectingNodeSchema from "./connecting-node-schema";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
-import NodeConnectionTypeEnum from "src/cluster/schemas/types/node-connection-type-enum";
-import NodeScoreBaseSchema from "./base/node-score-base-schema";
-import ipAddress from "src/network/ip-address";
+const NodeConsensusTypeEnum = require("../../../schemas/types/node-consensus-type-enum")
+const NodeConnectionTypeEnum = require("../../../schemas/types/node-connection-type-enum");
+const NodeScoreBaseSchema = require( "./base/node-score-base-schema");
+const ipAddress = require( "../../../../network/ip-address");
 
-export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
+module.exports = class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
     /**
      * It saves automatically in the database
@@ -148,7 +147,7 @@ export default class ConnectedNodeSchema extends NodeScoreBaseSchema {
 
     }
 
-    async createConnectingNode(){
+    async createConnectingNode(ConnectingNodeSchema){
 
         let add = false;
 

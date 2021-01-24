@@ -1,9 +1,9 @@
-import JsonRpcRouter from "../routes/json-rpc-router"
+const JsonRpcRouter = require( "../routes/json-rpc-router" )
 
-const {CryptoHelper} = global.kernel.helpers.crypto;
-const {Helper} = global.kernel.helpers;
+const {CryptoHelper} = require('kernel').helpers.crypto;
+const {Helper} = require('kernel').helpers;
 
-export default class CommonJsonRpcRouter extends JsonRpcRouter{
+module.exports = class CommonJsonRpcRouter extends JsonRpcRouter{
 
     _initJsonRpcRoutes(){
         return {

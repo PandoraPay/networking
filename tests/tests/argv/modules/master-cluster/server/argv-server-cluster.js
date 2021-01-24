@@ -1,10 +1,10 @@
-import ArgvServerSocketCluster from "./modules/argv-server-socket-cluster";
+const ArgvServerSocketCluster = require( "./modules/argv-server-socket-cluster" );
 
 /**
  * Arguments for Server Cluster
  */
 
-export default {
+module.exports = {
 
     serverSocket: ArgvServerSocketCluster,
 

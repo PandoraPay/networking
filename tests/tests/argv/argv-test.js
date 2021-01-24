@@ -1,9 +1,9 @@
-import ArgvMasterCluster from "./modules/master-cluster/argv-master-cluster";
-import ArgvBansManager from "./modules/bans-manager/argv-bans-manager";
+const ArgvMasterCluster = require( "./modules/master-cluster/argv-master-cluster");
+const ArgvBansManager = require("./modules/bans-manager/argv-bans-manager");
 
-const {Helper} = global.kernel.helpers;
+const {Helper} = require('kernel').helpers;
 
-export default argv => Helper.merge( argv, {
+module.exports = argv => Helper.merge( argv, {
 
     masterCluster: ArgvMasterCluster,
     bansManager: ArgvBansManager,

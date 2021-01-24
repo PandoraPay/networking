@@ -1,7 +1,7 @@
-import ipAddress from "./ip-address";
-const {Exception, BufferHelper} = global.kernel.helpers;
+const ipAddress = require( "./ip-address" );
+const {Exception, BufferHelper} = require('kernel').helpers;
 
-export default class BasicSocket {
+module.exports = class BasicSocket {
 
     constructor(scope, address, socket, handshake){
 
@@ -36,7 +36,7 @@ export default class BasicSocket {
         };
 
 
-        this._scope.logger.warn(this, "socketInitialized connected");
+        this._scope.logger.warn(this, "socketInitialized connected", {address: this.address});
 
         this._socket.once("disconnect", ()=>{
 

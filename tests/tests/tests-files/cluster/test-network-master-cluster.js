@@ -1,8 +1,8 @@
-const {describe} = global.kernel.tests;
-const  {Helper} = global.kernel.helpers;
-const {asyncTimeout} = global.kernel.helpers.AsyncInterval;
+const {describe} = require('kernel').tests;
+const  {Helper} = require('kernel').helpers;
+const {asyncTimeout} = require('kernel').helpers.AsyncInterval;
 
-export default function run (scope){
+module.exports = function run (scope){
 
     describe("Network Master cluster", {
 

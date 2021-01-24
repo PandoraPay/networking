@@ -1,10 +1,10 @@
-import ArgvSeedNodes from "./modules/argv-seed-nodes"
+const ArgvSeedNodes = require( "./modules/argv-seed-nodes" )
 
 /**
  * Arguments for Clients Cluster
  */
 
-export default {
+module.exports = {
 
     seedNodes: ArgvSeedNodes,
 

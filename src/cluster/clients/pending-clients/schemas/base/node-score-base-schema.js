@@ -1,14 +1,14 @@
-const {DBSchema} = global.kernel.marshal.db;
-const {Helper} = global.kernel.helpers;
+const {DBSchema} = require('kernel').marshal.db;
+const {Helper} = require('kernel').helpers;
 
-import NodeBaseSchema from "./node-base-schema";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const NodeBaseSchema = require("./node-base-schema");
+const NodeConsensusTypeEnum = require("../../../../schemas/types/node-consensus-type-enum")
 
 /**
  * Schema element used to create a Sorted List 8with a queue to connect to consensus nodes
  */
 
-export default class NodeScoreBaseSchema extends NodeBaseSchema {
+module.exports = class NodeScoreBaseSchema extends NodeBaseSchema {
 
     constructor(scope, schema = { }, data, type , creationOptions){
 

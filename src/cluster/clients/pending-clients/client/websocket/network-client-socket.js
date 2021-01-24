@@ -1,13 +1,13 @@
-const {Exception, Helper } = global.kernel.helpers;
+const {Exception, Helper } = require('kernel').helpers;
 
-import client from 'socket.io-client';
+const client = require( 'socket.io-client');
 
-import ipAddress from "src/network/ip-address";
-import BasicSocket from "src/network/basic-socket";
+const ipAddress = require( "../../../../../network/ip-address");
+const BasicSocket = require( "../../../../../network/basic-socket");
 
 //TODO extend socket.io client function using es6 class
 
-export default class NetworkClientSocket extends BasicSocket {
+module.exports = class NetworkClientSocket extends BasicSocket {
 
     connectAsync (address) {
 

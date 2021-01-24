@@ -1,8 +1,8 @@
 const ipaddr = require('ipaddr.js');
 
-const {Exception} = global.kernel.helpers;
+const {Exception} = require('kernel').helpers;
 
-export default class ipAddress {
+module.exports = class ipAddress {
 
     static create(protocol, address, port, id) {
 

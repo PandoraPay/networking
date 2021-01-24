@@ -4,18 +4,18 @@ const http = require('http');
 const cluster = require('cluster');
 const sticky = require('sticky-session');
 
-import NetworkHttpServerRouter from "./network-http-server-router"
-import HttpServerHelper from "./http-server-helper"
+const NetworkHttpServerRouter = require( "./network-http-server-router" )
+const HttpServerHelper = require( "./http-server-helper" )
 
-const {Helper} = global.kernel.helpers;
-const {HttpServer} = global.kernel.masterCluster;
+const {Helper} = require('kernel').helpers;
+const {HttpServer} = require('kernel').masterCluster;
 
 /**
  * scope:
  *          argv, logger, HttpServerRouter, SocketServer, SocketServerRouter
  */
 
-export default class NetworkHttpServer extends HttpServer {
+module.exports = class NetworkHttpServer extends HttpServer {
 
     constructor( scope ){
 

@@ -1,9 +1,9 @@
-import ArgvTest from "./argv/argv-test"
+const ArgvTest = require( "./argv/argv-test")
 
-import TestNetworkMasterCluster from "./tests-files/cluster/test-network-master-cluster"
-import TestIpAddress from "./tests-files/network/test-ip-address"
+const TestNetworkMasterCluster = require( "./tests-files/cluster/test-network-master-cluster")
+const TestIpAddress = require("./tests-files/network/test-ip-address")
 
-export default {
+module.exports = {
 
     argvTests: ArgvTest,
     tests: async scope =>{

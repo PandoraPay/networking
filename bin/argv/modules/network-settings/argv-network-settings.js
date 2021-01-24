@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     networkProtocolVersion: "0.1",
 

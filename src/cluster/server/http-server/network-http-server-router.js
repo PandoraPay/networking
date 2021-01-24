@@ -1,8 +1,8 @@
-const {Exception, BufferHelper } = global.kernel.helpers;
+const {Exception, BufferHelper } = require('kernel').helpers;
 
-import CommonSocketRouter from "../../../sockets/protocol/common-socket-router";
+const CommonSocketRouter = require( "../../../sockets/protocol/common-socket-router" );
 
-export default class NetworkHttpServerRouter extends CommonSocketRouter{
+module.exports = class NetworkHttpServerRouter extends CommonSocketRouter{
 
     constructor(scope) {
         super({

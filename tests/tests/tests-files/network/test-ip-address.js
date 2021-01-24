@@ -1,8 +1,8 @@
-const {describe} = global.kernel.tests;
+const {describe} = require('kernel').tests;
 
-import ipAdress from "src/network/ip-address"
+const ipAdress = require( "../../../../src/network/ip-address" )
 
-export default function run () {
+module.exports = function run () {
 
     describe("ip address tests", {
 

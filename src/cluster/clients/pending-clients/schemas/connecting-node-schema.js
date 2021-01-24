@@ -1,20 +1,20 @@
-import NodeConnectionTypeEnum from "src/cluster/schemas/types/node-connection-type-enum";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const {Helper} = require('kernel').helpers;
 
-const {Helper} = global.kernel.helpers;
+const NodeConnectionTypeEnum = require( "../../../schemas/types/node-connection-type-enum");
+const NodeConsensusTypeEnum = require( "../../../schemas/types/node-consensus-type-enum")
+const NodeTypeEnum = require("../../../schemas/types/node-type-enum");
 
-import ConnectedNodeSchema from "./connected-node-schema";
-import NodeScoreBaseSchema from "./base/node-score-base-schema";
-import NetworkClientSocket from "../client/websocket/network-client-socket";
+const ConnectedNodeSchema = require("./connected-node-schema");
+const NodeScoreBaseSchema = require("./base/node-score-base-schema");
+const NetworkClientSocket = require("../client/websocket/network-client-socket");
 
-import NodeTypeEnum from "src/cluster/schemas/types/node-type-enum";
-import ipAddress from "src/network/ip-address";
+const ipAddress = require("../../../../network/ip-address");
 
 /**
  * Schema element used to create a Sorted List 8with a queue to connect to consensus nodes
  */
 
-export default class ConnectingNodeSchema extends NodeScoreBaseSchema {
+module.exports = class ConnectingNodeSchema extends NodeScoreBaseSchema {
 
     constructor(scope, schema = { }, data, type , creationOptions){
 

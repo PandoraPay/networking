@@ -1,6 +1,6 @@
 const cluster = require('cluster');
 
-export default {
+module.exports = {
 
     _initArgv( parents ){
 

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const getCertificate = require('get-ssl-certificate')
 
-export default class HttpServerHelper{
+module.exports = class HttpServerHelper{
 
     static getCertificate(argv, domain = ''){
 

@@ -1,4 +1,4 @@
-const { Exception } = global.kernel.helpers;
+const { Exception } = require('kernel').helpers;
 
 const NodeTypeEnum = {
 
@@ -16,7 +16,7 @@ const NodeTypeEnum = {
 
 };
 
-export default {
+module.exports = {
 
     ...NodeTypeEnum,
 

@@ -3,7 +3,7 @@
  *          argv, logger
  */
 
-export default class RoutesGuardian {
+module.exports = class RoutesGuardian {
 
     constructor(scope){
 

@@ -1,8 +1,8 @@
-const {Helper} = global.kernel.helpers;
+const {Helper} = require('kernel').helpers;
 
-import CommonSocketRouter from "src/sockets/protocol/common-socket-router";
+const CommonSocketRouter = require( "../../../../sockets/protocol/common-socket-router" );
 
-export default class NetworkServerClientSocketRouter extends CommonSocketRouter{
+module.exports = class NetworkServerClientSocketRouter extends CommonSocketRouter{
 
     constructor(scope) {
         super({

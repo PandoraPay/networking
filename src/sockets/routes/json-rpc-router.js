@@ -22,7 +22,7 @@ const jsonRpcErrorMessages = {
     "-32603": "Internal error",
 };
 
-export default class JsonRpcRouter{
+module.exports = class JsonRpcRouter{
 
     constructor(scope){
         this._scope = scope;

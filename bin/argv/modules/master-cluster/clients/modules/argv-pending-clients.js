@@ -2,7 +2,7 @@
  * Arguments for Pending Clients
  */
 
-export default {
+module.exports = {
 
     /**
      * Per Cluster Instance

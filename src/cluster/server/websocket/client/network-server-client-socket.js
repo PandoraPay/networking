@@ -1,7 +1,7 @@
-import ipAddress from "src/network/ip-address";
-import BasicSocket from "src/network/basic-socket";
+const ipAddress = require( "../../../../network/ip-address");
+const BasicSocket = require("../../../../network/basic-socket");
 
-export default class NetworkServerClientSocket extends  BasicSocket {
+module.exports = class NetworkServerClientSocket extends  BasicSocket {
 
     constructor(scope, address, socket, handshake){
 

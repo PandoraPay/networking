@@ -1,10 +1,9 @@
-const {DBSchema} = global.kernel.marshal.db;
+const {DBSchema} = require('kernel').marshal.db;
+const {Helper, Exception, EnumHelper} = require('kernel').helpers;
 
-const {Helper, Exception, EnumHelper} = global.kernel.helpers;
-
-import NodeTypeEnum from "src/cluster/schemas/types/node-type-enum"
-import ipAddress from "src/network/ip-address"
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const ipAddress = require("../../../../../network/ip-address")
+const NodeTypeEnum = require( "../../../../schemas/types/node-type-enum" )
+const NodeConsensusTypeEnum = require( "../../../../schemas/types/node-consensus-type-enum")
 
 /**
  * Schema element used to create a Sorted List with a queue to connect to consensus nodes
@@ -12,7 +11,7 @@ import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type
 
 //TODO In case the network will get a lot of spam in the ip list, we can introduce a proof of work in the node base schema to avoid ip lists spam
 
-export default class NodeBaseSchema extends DBSchema {
+module.exports = class NodeBaseSchema extends DBSchema {
 
     constructor(scope, schema = { }, data, type , creationOptions){
 

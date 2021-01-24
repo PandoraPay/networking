@@ -1,13 +1,13 @@
-const {Helper} = global.kernel.helpers;
+const {Helper} = require('kernel').helpers;
 
-import ArgvMasterCluster from "./modules/master-cluster/argv-master-cluster";
-import ArgvNetworkSettings from "./modules/network-settings/argv-network-settings"
+const ArgvMasterCluster = require( "./modules/master-cluster/argv-master-cluster");
+const ArgvNetworkSettings = require("./modules/network-settings/argv-network-settings")
 
 /**
  * Network Routing Argv
  */
 
-export default (argv) => Helper.merge( argv, {
+module.exports = (argv) => Helper.merge( argv, {
 
     masterCluster: ArgvMasterCluster,
 

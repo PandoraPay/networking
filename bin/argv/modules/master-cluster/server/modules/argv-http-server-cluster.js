@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     /**
      * http server enabled

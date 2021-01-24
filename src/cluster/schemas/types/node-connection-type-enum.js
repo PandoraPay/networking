@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
     /**
      * Client Socket connected to a server

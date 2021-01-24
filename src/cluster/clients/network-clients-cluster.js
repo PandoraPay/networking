@@ -1,12 +1,11 @@
-import PendingClients from "./pending-clients/pending-clients";
-import NetworkClientSocketRouter from "./pending-clients/client/websocket/network-client-socket-router";
-import NetworkClientSocket from 'src/cluster/clients/pending-clients/client/websocket/network-client-socket';
+const PendingClients = require( "./pending-clients/pending-clients");
+const NetworkClientSocketRouter = require( "./pending-clients/client/websocket/network-client-socket-router");
+const NetworkClientSocket = require('../clients/pending-clients/client/websocket/network-client-socket');
 
+const {ClientsCluster} = require('kernel').masterCluster;
+const { Helper, Exception } = require('kernel').helpers;
 
-const {ClientsCluster} = global.kernel.masterCluster;
-const { Helper, Exception } = global.kernel.helpers;
-
-export default class NetworkClientsCluster extends ClientsCluster {
+module.exports = class NetworkClientsCluster extends ClientsCluster {
 	
 	constructor(scope)	{
 

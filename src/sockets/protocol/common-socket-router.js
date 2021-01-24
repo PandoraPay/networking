@@ -1,11 +1,11 @@
-const {Helper, Exception} = global.kernel.helpers;
+const {Helper, Exception} = require('kernel').helpers;
 
-import SocketsRouter from "../routes/socket-router"
-import CommonRpcRouter from "./common-rpc-router";
+const SocketsRouter = require( "../routes/socket-router")
+const CommonRpcRouter = require( "./common-rpc-router");
 
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const NodeConsensusTypeEnum = require( "../../cluster/schemas/types/node-consensus-type-enum" )
 
-export default class CommonSocketRouter extends SocketsRouter{
+module.exports = class CommonSocketRouter extends SocketsRouter{
 
     constructor(scope){
         super({

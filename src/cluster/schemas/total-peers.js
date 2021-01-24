@@ -1,8 +1,8 @@
-const {DBSchema} = global.kernel.marshal.db;
-const {Helper} = global.kernel.helpers;
-const {Exception} = global.kernel.helpers;
+const {DBSchema} = require('kernel').marshal.db;
+const {Helper} = require('kernel').helpers;
+const {Exception} = require('kernel').helpers;
 
-export default class TotalPeers extends DBSchema{
+module.exports = class TotalPeers extends DBSchema{
 
     constructor(scope, schema = { }, data, type , creationOptions){
 

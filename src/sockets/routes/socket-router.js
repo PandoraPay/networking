@@ -3,11 +3,11 @@
  *          argv, logger, socketsRoutesGuardian
  */
 
-import RoutesGuardian from "./guardian/routes-guardian";
-import JsonRpcRouter from "./json-rpc-router";
-const {Helper} = global.kernel.helpers;
+const RoutesGuardian = require( "./guardian/routes-guardian" );
+const JsonRpcRouter = require( "./json-rpc-router");
+const {Helper} = require('kernel').helpers;
 
-export default class SocketRouter {
+module.exports = class SocketRouter {
 
     constructor(scope){
 

@@ -1,11 +1,11 @@
-import ArgvClientsMasterCluster from "./clients/argv-clients-cluster"
-import ArgvServerMasterCluster from "./server/argv-server-cluster"
+const ArgvClientsMasterCluster = require( "./clients/argv-clients-cluster")
+const ArgvServerMasterCluster = require("./server/argv-server-cluster")
 
 /**
  * Arguments for Master Cluster
  */
 
-export default {
+module.exports = {
 
 
     clientsCluster: ArgvClientsMasterCluster,

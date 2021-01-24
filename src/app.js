@@ -1,12 +1,12 @@
-const kernel = global.kernel;
-const {MasterCluster} = global.kernel.masterCluster;
+const kernel = require('kernel');
+const {MasterCluster} = kernel.masterCluster;
 
-import Argv from "bin/argv/argv"
+const Argv = require( "../bin/argv/argv" )
 
-import Tests from 'tests/tests/tests-index';
-import NetworkMasterCluster from "./cluster/network-master-cluster"
+const Tests = require( '../tests/tests/tests-index');
+const NetworkMasterCluster = require( "./cluster/network-master-cluster")
 
-export default class App extends kernel.utils.App {
+module.exports = class App extends kernel.utils.App {
 
     setAdditionalEvents(){
 

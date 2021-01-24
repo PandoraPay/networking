@@ -1,4 +1,4 @@
-export default class SocketRouterPlugin {
+module.exports = class SocketRouterPlugin {
 
     constructor(scope){
         this._scope = scope;

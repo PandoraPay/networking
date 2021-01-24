@@ -1,21 +1,21 @@
-import ConnectedNodeSchema from "../../clients/pending-clients/schemas/connected-node-schema";
-
 const server = require('socket.io');
+const {Exception } = require('kernel').helpers;
+const {Helper} = require('kernel').helpers;
 
-import NetworkServerClientSocket from "./client/network-server-client-socket"
-import NetworkServerClientSocketRouter from "./client/network-server-client-socket-router"
-import NodeConnectionTypeEnum from "../../schemas/types/node-connection-type-enum";
-import NodeConsensusTypeEnum from "src/cluster/schemas/types/node-consensus-type-enum"
+const ConnectedNodeSchema = require("../../clients/pending-clients/schemas/connected-node-schema");
+const NetworkServerClientSocket = require("./client/network-server-client-socket")
+const NetworkServerClientSocketRouter = require( "./client/network-server-client-socket-router")
+const NodeConnectionTypeEnum = require( "../../schemas/types/node-connection-type-enum");
+const NodeConsensusTypeEnum = require( "../../schemas/types/node-consensus-type-enum")
 
-const {Exception } = global.kernel.helpers;
-const {Helper} = global.kernel.helpers;
+
 
 /**
  * scope
  *          argv, logger, db, masterCluster, httpServer, httpServerClass
  */
 
-export default class NetworkServerSocket extends server {
+module.exports = class NetworkServerSocket extends server {
 
     constructor(scope){
 
