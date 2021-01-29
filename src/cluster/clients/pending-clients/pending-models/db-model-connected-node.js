@@ -1,56 +1,19 @@
 const {Helper, EnumHelper} = require('kernel').helpers;
 
-const NodeConsensusTypeEnum = require("../../../schemas/types/node-consensus-type-enum")
-const NodeConnectionTypeEnum = require("../../../schemas/types/node-connection-type-enum");
-const NodeScoreBaseSchema = require( "./base/node-score-base-schema");
-const ipAddress = require( "../../../../network/ip-address");
+const NodeConnectionTypeEnum = require("../../../network-models/types/node-connection-type-enum");
+const DBModelNodeBase = require( "./base/db-model-node-base");
 
-module.exports = class ConnectedNodeSchema extends NodeScoreBaseSchema {
+const {DBSchemaBuiltConnectedNode} = require('./schema/db-schema-build-connected-node')
+
+module.exports = class DBModelConnectedNode extends DBModelNodeBase  {
 
     /**
      * It saves automatically in the database
      */
 
-    constructor( scope, schema = { }, data, type, creationOptions ){
+    constructor( scope, schema = DBSchemaBuiltConnectedNode, data, type, creationOptions ){
 
-        super(scope, Helper.merge({
-
-                fields:{
-
-                    table: {
-                        default: "node_connect",
-                        fixedBytes: 12,
-                    },
-
-                    connection: {
-
-                        type: "number",
-                        validation: value => EnumHelper.validateEnum(value, NodeConnectionTypeEnum ),
-
-                        position: 201,
-                    },
-
-                    serverAddress: {
-                        /**
-                         * Address contains protocol, address and port
-                         */
-                        type: "string",
-                        default: "0.0.0.0:0",
-
-                        /**
-                         * Validate the address and use the normalized version
-                         */
-                        preprocessor (value , name ) {
-                            this._ipServerAddress = ipAddress.create(value);
-                            return this._ipServerAddress.toString();
-                        },
-
-                        position: 202,
-                    },
-
-                }
-            },
-            schema, false), data, type, creationOptions);
+        super(scope, schema, data, type, creationOptions);
 
         //socket attached
         if (scope.socket) {

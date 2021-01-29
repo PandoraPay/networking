@@ -1,5 +1,5 @@
-const NodeTypeEnum = require("../../../../../../../src/cluster/schemas/types/node-type-enum");
-const NodeConsensusTypeEnum = require( "../../../../../../../src/cluster/schemas/types/node-consensus-type-enum");
+const NodeTypeEnum = require("../../../../../../../src/cluster/network-models/types/node-type-enum");
+const NodeConsensusTypeEnum = require( "../../../../../../../src/cluster/network-models/types/node-consensus-type-enum");
 
 module.exports = {
 

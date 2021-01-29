@@ -21,14 +21,19 @@ const TestsFiles = require("./tests/tests/tests-index");
 
 const client = require('socket.io-client');
 
-const NodeConsensusTypeEnum = require("./src/cluster/schemas/types/node-consensus-type-enum");
-const NodeConnectionTypeEnum = require("./src/cluster/schemas/types/node-connection-type-enum");
-const TotalPeers = require("./src/cluster/schemas/total-peers");
-const KnownPeers = require("./src/cluster/schemas/known-nodes");
+const NodeConsensusTypeEnum = require("./src/cluster/network-models/types/node-consensus-type-enum");
+const NodeConnectionTypeEnum = require("./src/cluster/network-models/types/node-connection-type-enum");
+const DBModelTotalPeers = require("./src/cluster/network-models/db-model-total-peers");
+const KnownPeers = require("./src/cluster/known-nodes");
 
-const library = {
+const DBSchemaBuildTotalPeers = require('./src/cluster/network-models/schema/db-schema-build-total-peers')
+const DBSchemaBuildConnectingNode = require('./src/cluster/clients/pending-clients/pending-models/schema/db-schema-build-connecting-node')
+const DBSchemaBuildConnectedNode = require('./src/cluster/clients/pending-clients/pending-models/schema/db-schema-build-connected-node')
+const DBSchemaBuildNodeBase = require('./src/cluster/clients/pending-clients/pending-models/base/schema/db-schema-build-node-base')
 
-    ...kernel,
+const {Helper} = require('kernel').helpers;
+
+const library = Helper.merge( kernel, {
 
     app: new App({}),
 
@@ -66,32 +71,35 @@ const library = {
             CommonRpcRouter,
             SocketRouterPlugin,
         },
-
-        schemas: {
-
-            types: {
-                NodeConnectionTypeEnum,
-                NodeConsensusTypeEnum,
-            },
-
-            KnownPeers,
-            TotalPeers,
-
-        },
+        KnownPeers,
 
     },
 
+    schemas:{
+        DBSchemaBuildTotalPeers,
+        DBSchemaBuildConnectingNode,
+        DBSchemaBuildConnectedNode,
+        DBSchemaBuildNodeBase,
+    },
+
+    models: {
+        DBModelTotalPeers,
+    },
+
+    enums: {
+        NodeConnectionTypeEnum,
+        NodeConsensusTypeEnum,
+    },
+
     utils: {
-        ...kernel.utils,
         App: App,
     },
 
     tests: {
-        ...kernel.tests,
         TestsFiles,
     }
 
-};
+}, false );
 
 
 

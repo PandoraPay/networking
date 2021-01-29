@@ -1,7 +1,7 @@
-const NodeConsensusTypeEnum = require( "../schemas/types/node-consensus-type-enum" )
+const NodeConsensusTypeEnum = require( "./network-models/types/node-consensus-type-enum" )
 
 const {Helper} = require('kernel').helpers;
-const {DBSchemaHelper} = require('kernel').marshal.db;
+const {DBSchemaHelper} = require('kernel').db;
 
 const  {setAsyncInterval, clearAsyncInterval} = require('kernel').helpers.AsyncInterval;
 

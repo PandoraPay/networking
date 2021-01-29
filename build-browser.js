@@ -1,4 +1,8 @@
+if ( typeof BROWSER !== "undefined" )
+    global.BROWSER = true;
+
 const library = require("./index");
 
-module.exports = library;
+window.library = library;
 
+module.exports = library;

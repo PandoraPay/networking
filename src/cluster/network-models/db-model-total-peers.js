@@ -1,45 +1,13 @@
-const {DBSchema} = require('kernel').marshal.db;
+const {DBModel} = require('kernel').db;
 const {Helper} = require('kernel').helpers;
 const {Exception} = require('kernel').helpers;
 
-module.exports = class TotalPeers extends DBSchema{
+const {DBSchemaBuiltTotalPeers} = require('./schema/db-schema-build-total-peers')
 
-    constructor(scope, schema = { }, data, type , creationOptions){
+module.exports = class DBModelTotalPeers extends DBModel {
 
-        super(scope, Helper.merge( {
-
-                fields:{
-
-                    table: {
-                        default: "network",
-                        fixedBytes: 7,
-                    },
-
-                    id: {
-                        default: "TotalPeers",
-                        fixedBytes: 10,
-                    },
-
-                    count: {
-                        type: "number",
-                        position: 100,
-                    },
-
-                    client: {
-                        type: "number",
-                        position: 101,
-                    },
-
-                    server: {
-                        type: "number",
-                        position: 102,
-                    }
-
-                }
-
-            },
-            schema, false), data, type, creationOptions);
-
+    constructor(scope, schema = DBSchemaBuiltTotalPeers, data, type , creationOptions){
+        super(scope, schema, data, type, creationOptions);
     }
 
     async start(){

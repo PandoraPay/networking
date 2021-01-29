@@ -1,4 +1,4 @@
-const cluster = require('cluster');
+const {cluster} = require('kernel').masterCluster;
 
 module.exports = {
 

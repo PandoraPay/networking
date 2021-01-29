@@ -2,11 +2,11 @@ const server = require('socket.io');
 const {Exception } = require('kernel').helpers;
 const {Helper} = require('kernel').helpers;
 
-const ConnectedNodeSchema = require("../../clients/pending-clients/schemas/connected-node-schema");
+const DBModelConnectedNode = require("../../clients/pending-clients/pending-models/db-model-connected-node");
 const NetworkServerClientSocket = require("./client/network-server-client-socket")
 const NetworkServerClientSocketRouter = require( "./client/network-server-client-socket-router")
-const NodeConnectionTypeEnum = require( "../../schemas/types/node-connection-type-enum");
-const NodeConsensusTypeEnum = require( "../../schemas/types/node-consensus-type-enum")
+const NodeConnectionTypeEnum = require( "../../network-models/types/node-connection-type-enum");
+const NodeConsensusTypeEnum = require( "../../network-models/types/node-consensus-type-enum")
 
 
 
@@ -160,7 +160,7 @@ module.exports = class NetworkServerSocket extends server {
              */
             this._scope.masterCluster.totalPeers.updatePeers(0, +1 );
 
-            const connectedNode = new ConnectedNodeSchema( {
+            const connectedNode = new DBModelConnectedNode( {
 
                 ...this._scope,
                 socket: newServerClientSocket,

@@ -1,38 +1,26 @@
 const {Helper} = require('kernel').helpers;
 
-const NodeConnectionTypeEnum = require( "../../../schemas/types/node-connection-type-enum");
-const NodeConsensusTypeEnum = require( "../../../schemas/types/node-consensus-type-enum")
-const NodeTypeEnum = require("../../../schemas/types/node-type-enum");
+const NodeConnectionTypeEnum = require( "../../../network-models/types/node-connection-type-enum");
+const NodeConsensusTypeEnum = require( "../../../network-models/types/node-consensus-type-enum")
+const NodeTypeEnum = require("../../../network-models/types/node-type-enum");
 
-const ConnectedNodeSchema = require("./connected-node-schema");
-const NodeScoreBaseSchema = require("./base/node-score-base-schema");
+const DBModelConnectedNode = require("./db-model-connected-node");
+const DBModelNodeBase = require("./base/db-model-node-base");
 const NetworkClientSocket = require("../client/websocket/network-client-socket");
 
 const ipAddress = require("../../../../network/ip-address");
+
+const {DBSchemaBuiltConnectingNode} = require('./schema/db-schema-build-connecting-node')
 
 /**
  * Schema element used to create a Sorted List 8with a queue to connect to consensus nodes
  */
 
-module.exports = class ConnectingNodeSchema extends NodeScoreBaseSchema {
+module.exports = class ConnectingNodeSchema extends DBModelNodeBase {
 
-    constructor(scope, schema = { }, data, type , creationOptions){
+    constructor(scope, schema = DBSchemaBuiltConnectingNode, data, type , creationOptions){
 
-        super(scope, Helper.merge( {
-
-                fields:{
-
-                    table: {
-
-                        default: "node_list",
-                        fixedBytes: 9,
-
-                    },
-
-                }
-
-            },
-            schema, false), data, type, creationOptions);
+        super(scope, schema, data, type, creationOptions);
 
         this.connectedNode = undefined;
         this.client = undefined;
@@ -86,7 +74,7 @@ module.exports = class ConnectingNodeSchema extends NodeScoreBaseSchema {
 
     createConnectedNode( client ){
 
-        this.connectedNode = new ConnectedNodeSchema( {
+        this.connectedNode = new DBModelConnectedNode( {
 
             ...this._scope,
             socket: client,

@@ -1,21 +1,16 @@
-const {DBSchema} = require('kernel').marshal.db;
+const {DBSchemaBuild} = require('kernel').db;
 const {Helper, Exception, EnumHelper} = require('kernel').helpers;
 
-const ipAddress = require("../../../../../network/ip-address")
-const NodeTypeEnum = require( "../../../../schemas/types/node-type-enum" )
-const NodeConsensusTypeEnum = require( "../../../../schemas/types/node-consensus-type-enum")
+const ipAddress = require("../../../../../../network/ip-address")
+const NodeTypeEnum = require( "../../../../../network-models/types/node-type-enum" )
+const NodeConsensusTypeEnum = require( "../../../../../network-models/types/node-consensus-type-enum")
 
-/**
- * Schema element used to create a Sorted List with a queue to connect to consensus nodes
- */
 
-//TODO In case the network will get a lot of spam in the ip list, we can introduce a proof of work in the node base schema to avoid ip lists spam
+class DBSchemaBuildNodeBase extends DBSchemaBuild{
 
-module.exports = class NodeBaseSchema extends DBSchema {
+    constructor(schema) {
 
-    constructor(scope, schema = { }, data, type , creationOptions){
-
-        super(scope, Helper.merge( {
+        super(Helper.merge( {
 
                 fields:{
 
@@ -136,7 +131,7 @@ module.exports = class NodeBaseSchema extends DBSchema {
 
                             if (this.seedNode) return true;
 
-                            if ( !NodeBaseSchema.validateNodeDate(date, this._scope ) )
+                            if ( !DBSchemaBuildNodeBase.validateNodeDate(date, this._scope ) )
                                 throw new Exception(this, "Node Lifespan is invalid");
 
                             return true;
@@ -146,7 +141,18 @@ module.exports = class NodeBaseSchema extends DBSchema {
 
                     },
 
+                    /**
+                     * Score combines (latency, fails, successes)
+                     * Score to sort the list by a feedback score
+                     */
+                    score: {
 
+                        type: "number",
+                        default: 1000,
+                        maxSize: 1 << 16 - 1,
+
+                        position: 108,
+                    },
 
                     /**
                      * id is generated using the normalized ipAddress of the connection. Redis doesn't support the key ":"
@@ -162,17 +168,7 @@ module.exports = class NodeBaseSchema extends DBSchema {
                 }
 
             },
-            schema, false), data, type, creationOptions);
-
-    }
-
-    _getData(){
-
-        return {
-            seedNode: this.seedNode,
-            ...this.toObject(false )
-        }
-
+            schema, true));
     }
 
     static validateNodeDate(date, scope){
@@ -181,3 +177,7 @@ module.exports = class NodeBaseSchema extends DBSchema {
 
 }
 
+module.exports = {
+    DBSchemaBuildNodeBase,
+    DBSchemaBuiltNodeBase: new DBSchemaBuildNodeBase(),
+}

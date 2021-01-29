@@ -3,7 +3,7 @@ const {Helper, Exception} = require('kernel').helpers;
 const SocketsRouter = require( "../routes/socket-router")
 const CommonRpcRouter = require( "./common-rpc-router");
 
-const NodeConsensusTypeEnum = require( "../../cluster/schemas/types/node-consensus-type-enum" )
+const NodeConsensusTypeEnum = require( "../../cluster/network-models/types/node-consensus-type-enum" )
 
 module.exports = class CommonSocketRouter extends SocketsRouter{
 
@@ -110,7 +110,7 @@ module.exports = class CommonSocketRouter extends SocketsRouter{
                 type: this._scope.argv.settings.networkType,
             },
 
-            address: this._scope.masterCluster.serverCluster.httpServer ? this._scope.masterCluster.serverCluster.httpServer.address : '',
+            address: (!BROWSER && this._scope.masterCluster.serverCluster.httpServer) ? this._scope.masterCluster.serverCluster.httpServer.address : '',
 
             consensus: consensusType,
 
