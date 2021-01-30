@@ -23,13 +23,13 @@ const client = require('socket.io-client');
 
 const NodeConsensusTypeEnum = require("./src/cluster/network-models/types/node-consensus-type-enum");
 const NodeConnectionTypeEnum = require("./src/cluster/network-models/types/node-connection-type-enum");
-const DBModelTotalPeers = require("./src/cluster/network-models/db-model-total-peers");
+const TotalPeersDBModel = require("./src/cluster/network-models/total-peers-db-model");
 const KnownPeers = require("./src/cluster/known-nodes");
 
-const DBSchemaBuildTotalPeers = require('./src/cluster/network-models/schema/db-schema-build-total-peers')
-const DBSchemaBuildConnectingNode = require('./src/cluster/clients/pending-clients/pending-models/schema/db-schema-build-connecting-node')
-const DBSchemaBuildConnectedNode = require('./src/cluster/clients/pending-clients/pending-models/schema/db-schema-build-connected-node')
-const DBSchemaBuildNodeBase = require('./src/cluster/clients/pending-clients/pending-models/base/schema/db-schema-build-node-base')
+const TotalPeersDBSchemaBuild = require('./src/cluster/network-models/schema/total-peers-db-schema-build')
+const ConnectingNodeDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connecting-node-db-schema-build')
+const BuildConnectedNodeDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connected-node-db-schema-build')
+const NodeBaseDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/base/schema/node-base-db-schema-build')
 
 const {Helper} = require('kernel').helpers;
 
@@ -76,14 +76,14 @@ const library = Helper.merge( kernel, {
     },
 
     schemas:{
-        DBSchemaBuildTotalPeers,
-        DBSchemaBuildConnectingNode,
-        DBSchemaBuildConnectedNode,
-        DBSchemaBuildNodeBase,
+        TotalPeersDBSchemaBuild,
+        ConnectingNodeDBSchemaBuild,
+        BuildConnectedNodeDBSchemaBuild,
+        NodeBaseDBSchemaBuild,
     },
 
     models: {
-        DBModelTotalPeers,
+        TotalPeersDBModel,
     },
 
     enums: {

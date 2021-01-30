@@ -1,9 +1,9 @@
 const {DBSchemaBuild} = require('kernel').db;
 const {Helper, Exception, EnumHelper} = require('kernel').helpers;
 
-const {DBSchemaBuildNodeBase} = require('../base/schema/db-schema-build-node-base')
+const {NodeBaseDBSchemaBuild} = require('../base/schema/node-base-db-schema-build')
 
-class DBSchemaBuildConnectingNode extends DBSchemaBuildNodeBase{
+class ConnectingNodeDBSchemaBuild extends NodeBaseDBSchemaBuild{
 
     constructor(schema) {
 
@@ -27,6 +27,6 @@ class DBSchemaBuildConnectingNode extends DBSchemaBuildNodeBase{
 }
 
 module.exports = {
-    DBSchemaBuildConnectingNode,
-    DBSchemaBuiltConnectingNode: new DBSchemaBuildConnectingNode(),
+    ConnectingNodeDBSchemaBuild,
+    ConnectingNodeDBSchemaBuilt: new ConnectingNodeDBSchemaBuild(),
 }

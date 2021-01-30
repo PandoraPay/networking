@@ -1,17 +1,17 @@
 const {Helper, EnumHelper} = require('kernel').helpers;
 
 const NodeConnectionTypeEnum = require("../../../network-models/types/node-connection-type-enum");
-const DBModelNodeBase = require( "./base/db-model-node-base");
+const NodeBaseDBModel = require( "./base/base-db-model-node");
 
-const {DBSchemaBuiltConnectedNode} = require('./schema/db-schema-build-connected-node')
+const {ConnectedNodeDBSchemaBuilt} = require('./schema/connected-node-db-schema-build')
 
-module.exports = class DBModelConnectedNode extends DBModelNodeBase  {
+module.exports = class ConnectedNodeDBModel extends NodeBaseDBModel  {
 
     /**
      * It saves automatically in the database
      */
 
-    constructor( scope, schema = DBSchemaBuiltConnectedNode, data, type, creationOptions ){
+    constructor( scope, schema = ConnectedNodeDBSchemaBuilt, data, type, creationOptions ){
 
         super(scope, schema, data, type, creationOptions);
 
@@ -110,7 +110,7 @@ module.exports = class DBModelConnectedNode extends DBModelNodeBase  {
 
     }
 
-    async createConnectingNode(ConnectingNodeSchema){
+    async createConnectingNode(ConnectingNodeDBSchema){
 
         let add = false;
 
@@ -120,7 +120,7 @@ module.exports = class DBModelConnectedNode extends DBModelNodeBase  {
 
         if (!add) return;
 
-        const connectingNode = new ConnectingNodeSchema( this._scope, undefined, {
+        const connectingNode = new ConnectingNodeDBSchema( this._scope, undefined, {
 
             ...this._getData(),
             address: this.serverAddress !== "0.0.0.0:0" ? this.serverAddress : this.address,

@@ -2,8 +2,8 @@ const {Exception, BufferHelper } = require('kernel').helpers;
 
 const NodeConnectionTypeEnum = require( "../../network-models/types/node-connection-type-enum" )
 
-const DBModelConnectingNode = require( "./pending-models/db-model-connecting-node");
-const DBModelConnectedNode = require( "./pending-models/db-model-connected-node");
+const DBModelConnectingNode = require( "./pending-models/connecting-node-db-model");
+const ConnectedNodeDBModel = require( "./pending-models/connected-node-db-model");
 
 module.exports = class PendingClients {
 
@@ -106,8 +106,8 @@ module.exports = class PendingClients {
 
         if (!this._connectedMap[id]){
 
-            if (!(connectedNode instanceof DBModelConnectedNode))
-                connectedNode = new DBModelConnectedNode( this._scope, undefined, connectedNode );
+            if (!(connectedNode instanceof ConnectedNodeDBModel))
+                connectedNode = new ConnectedNodeDBModel( this._scope, undefined, connectedNode );
 
             this._connectedMap[connectedNode.id] = connectedNode;
             this._connectedList.push(connectedNode);

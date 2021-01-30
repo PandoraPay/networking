@@ -4,21 +4,21 @@ const NodeConnectionTypeEnum = require( "../../../network-models/types/node-conn
 const NodeConsensusTypeEnum = require( "../../../network-models/types/node-consensus-type-enum")
 const NodeTypeEnum = require("../../../network-models/types/node-type-enum");
 
-const DBModelConnectedNode = require("./db-model-connected-node");
-const DBModelNodeBase = require("./base/db-model-node-base");
+const ConnectedNodeDBModel = require("./connected-node-db-model");
+const NodeBaseDBModel = require("./base/base-db-model-node");
 const NetworkClientSocket = require("../client/websocket/network-client-socket");
 
 const ipAddress = require("../../../../network/ip-address");
 
-const {DBSchemaBuiltConnectingNode} = require('./schema/db-schema-build-connecting-node')
+const {ConnectingNodeDBSchemaBuilt} = require('./schema/connecting-node-db-schema-build')
 
 /**
  * Schema element used to create a Sorted List 8with a queue to connect to consensus nodes
  */
 
-module.exports = class ConnectingNodeSchema extends DBModelNodeBase {
+module.exports = class ConnectingNodeDBSchema extends NodeBaseDBModel {
 
-    constructor(scope, schema = DBSchemaBuiltConnectingNode, data, type , creationOptions){
+    constructor(scope, schema = ConnectingNodeDBSchemaBuilt, data, type , creationOptions){
 
         super(scope, schema, data, type, creationOptions);
 
@@ -74,7 +74,7 @@ module.exports = class ConnectingNodeSchema extends DBModelNodeBase {
 
     createConnectedNode( client ){
 
-        this.connectedNode = new DBModelConnectedNode( {
+        this.connectedNode = new ConnectedNodeDBModel( {
 
             ...this._scope,
             socket: client,

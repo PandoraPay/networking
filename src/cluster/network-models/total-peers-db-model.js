@@ -2,11 +2,11 @@ const {DBModel} = require('kernel').db;
 const {Helper} = require('kernel').helpers;
 const {Exception} = require('kernel').helpers;
 
-const {DBSchemaBuiltTotalPeers} = require('./schema/db-schema-build-total-peers')
+const {TotalPeersDBSchemaBuilt} = require('./schema/total-peers-db-schema-build')
 
-module.exports = class DBModelTotalPeers extends DBModel {
+module.exports = class TotalPeersDBModel extends DBModel {
 
-    constructor(scope, schema = DBSchemaBuiltTotalPeers, data, type , creationOptions){
+    constructor(scope, schema = TotalPeersDBSchemaBuilt, data, type , creationOptions){
         super(scope, schema, data, type, creationOptions);
     }
 

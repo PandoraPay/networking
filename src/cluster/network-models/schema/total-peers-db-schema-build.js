@@ -1,7 +1,7 @@
 const {DBSchemaBuild} = require('kernel').db;
 const {Helper, Exception, EnumHelper} = require('kernel').helpers;
 
-class DBSchemaBuildTotalPeers extends DBSchemaBuild{
+class TotalPeersDBSchemaBuild extends DBSchemaBuild{
 
     constructor(schema) {
 
@@ -42,6 +42,6 @@ class DBSchemaBuildTotalPeers extends DBSchemaBuild{
 }
 
 module.exports = {
-    DBSchemaBuildTotalPeers,
-    DBSchemaBuiltTotalPeers: new DBSchemaBuildTotalPeers()
+    TotalPeersDBSchemaBuild,
+    TotalPeersDBSchemaBuilt: new TotalPeersDBSchemaBuild()
 }

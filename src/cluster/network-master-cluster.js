@@ -5,7 +5,7 @@ const {Helper} = require('kernel').helpers;
 const NetworkServerCluster = BROWSER ? undefined : require("./server/network-server-cluster");
 
 const NetworkClientsCluster = require( "./clients/network-clients-cluster" )
-const DBModelTotalPeers = require( "./network-models/db-model-total-peers");
+const TotalPeersDBModel = require( "./network-models/total-peers-db-model");
 const KnownNodes = require( "./known-nodes");
 const NodeConsensusTypeEnum = require( "./network-models/types/node-consensus-type-enum")
 
@@ -37,7 +37,7 @@ module.exports = class NetworkMasterCluster extends MasterCluster {
         /**
          * Create Total Peers
          */
-        this.totalPeers = new DBModelTotalPeers({
+        this.totalPeers = new TotalPeersDBModel({
             ...this._scope,
             masterCluster: this,
         });
