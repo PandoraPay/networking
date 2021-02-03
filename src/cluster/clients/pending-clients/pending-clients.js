@@ -2,8 +2,8 @@ const {Exception, BufferHelper } = require('kernel').helpers;
 
 const NodeConnectionTypeEnum = require( "../../network-models/types/node-connection-type-enum" )
 
-const DBModelConnectingNode = require( "./pending-models/connecting-node-db-model");
-const ConnectedNodeDBModel = require( "./pending-models/connected-node-db-model");
+const ConnectingNodeModel = require( "./pending-models/connecting-node-model");
+const ConnectedNodeModel = require( "./pending-models/connected-node-model");
 
 module.exports = class PendingClients {
 
@@ -68,8 +68,8 @@ module.exports = class PendingClients {
 
         if (!this._connectingMap[id]){
 
-            if (!(connectingNode instanceof DBModelConnectingNode))
-                connectingNode = new DBModelConnectingNode( this._scope, undefined, connectingNode );
+            if (!(connectingNode instanceof ConnectingNodeModel))
+                connectingNode = new ConnectingNodeModel( this._scope, undefined, connectingNode );
 
             this._connectingMap[connectingNode.id] = connectingNode;
             this._connectingList.push(connectingNode);
@@ -106,8 +106,8 @@ module.exports = class PendingClients {
 
         if (!this._connectedMap[id]){
 
-            if (!(connectedNode instanceof ConnectedNodeDBModel))
-                connectedNode = new ConnectedNodeDBModel( this._scope, undefined, connectedNode );
+            if (!(connectedNode instanceof ConnectedNodeModel))
+                connectedNode = new ConnectedNodeModel( this._scope, undefined, connectedNode );
 
             this._connectedMap[connectedNode.id] = connectedNode;
             this._connectedList.push(connectedNode);
@@ -258,7 +258,7 @@ module.exports = class PendingClients {
         try{
 
             if (this._scope.argv.masterCluster.clientsCluster.pendingClients.convertConnectedNodesToQueueNodes)
-                await Promise.all ( this._connectedList.map( it => it.createConnectingNode(DBModelConnectingNode) ) );
+                await Promise.all ( this._connectedList.map( it => it.createConnectingNode(ConnectingNodeModel) ) );
 
 
         }catch (err){
@@ -298,7 +298,7 @@ module.exports = class PendingClients {
              * save nodeQueue
              */
 
-            const nodeQueue = new DBModelConnectingNode( this._scope, undefined, pendingConnection );
+            const nodeQueue = new ConnectingNodeModel( this._scope, undefined, pendingConnection );
 
             let save = isSeedNode;
             if (!this._connectedMap[nodeQueue.id] && !this._connectingMap[nodeQueue.id]) save = true;

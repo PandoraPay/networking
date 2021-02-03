@@ -23,13 +23,13 @@ const client = require('socket.io-client');
 
 const NodeConsensusTypeEnum = require("./src/cluster/network-models/types/node-consensus-type-enum");
 const NodeConnectionTypeEnum = require("./src/cluster/network-models/types/node-connection-type-enum");
-const TotalPeersDBModel = require("./src/cluster/network-models/total-peers-db-model");
+const TotalPeersModel = require("./src/cluster/network-models/total-peers-model");
 const KnownPeers = require("./src/cluster/known-nodes");
 
-const TotalPeersDBSchemaBuild = require('./src/cluster/network-models/schema/total-peers-db-schema-build')
-const ConnectingNodeDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connecting-node-db-schema-build')
-const BuildConnectedNodeDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connected-node-db-schema-build')
-const NodeBaseDBSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/base/schema/node-base-db-schema-build')
+const TotalPeersSchemaBuild = require('./src/cluster/network-models/schema/total-peers-schema-build')
+const ConnectingNodeSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connecting-node-schema-build')
+const ConnectedNodeSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connected-node-schema-build')
+const NodeBaseSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/base/schema/node-base-schema-build')
 
 const {Helper} = require('kernel').helpers;
 
@@ -76,14 +76,14 @@ const library = Helper.merge( kernel, {
     },
 
     schemas:{
-        TotalPeersDBSchemaBuild,
-        ConnectingNodeDBSchemaBuild,
-        BuildConnectedNodeDBSchemaBuild,
-        NodeBaseDBSchemaBuild,
+        TotalPeersSchemaBuild,
+        ConnectingNodeSchemaBuild,
+        ConnectedNodeSchemaBuild,
+        NodeBaseSchemaBuild,
     },
 
     models: {
-        TotalPeersDBModel,
+        TotalPeersModel,
     },
 
     enums: {

@@ -1,5 +1,5 @@
 const {DBModel} = require('kernel').db;
-const {NodeBaseDBSchemaBuilt} = require('./schema/node-base-db-schema-build')
+const {NodeBaseSchemaBuilt} = require('./schema/node-base-schema-build')
 
 /**
  * Schema element used to create a Sorted List with a queue to connect to consensus nodes
@@ -7,9 +7,9 @@ const {NodeBaseDBSchemaBuilt} = require('./schema/node-base-db-schema-build')
 
 //TODO In case the network will get a lot of spam in the ip list, we can introduce a proof of work in the node base schema to avoid ip lists spam
 
-module.exports = class NodeBaseDBModel extends DBModel {
+module.exports = class NodeBaseModel extends DBModel {
 
-    constructor(scope, schema = NodeBaseDBSchemaBuilt, data, type , creationOptions){
+    constructor(scope, schema = NodeBaseSchemaBuilt, data, type , creationOptions){
         super(scope, schema, data, type, creationOptions);
     }
 

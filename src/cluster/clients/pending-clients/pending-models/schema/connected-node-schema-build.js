@@ -3,9 +3,9 @@ const {Helper, Exception, EnumHelper} = require('kernel').helpers;
 const NodeConnectionTypeEnum = require( "../../../../network-models/types/node-connection-type-enum");
 const ipAddress = require("../../../../../network/ip-address")
 
-const {NodeBaseDBSchemaBuild} = require('../base/schema/node-base-db-schema-build')
+const {NodeBaseSchemaBuild} = require('../base/schema/node-base-schema-build')
 
-class ConnectedNodeDBSchemaBuild extends NodeBaseDBSchemaBuild {
+class ConnectedNodeSchemaBuild extends NodeBaseSchemaBuild {
 
     constructor(schema) {
 
@@ -52,6 +52,6 @@ class ConnectedNodeDBSchemaBuild extends NodeBaseDBSchemaBuild {
 }
 
 module.exports = {
-    ConnectedNodeDBSchemaBuild,
-    ConnectedNodeDBSchemaBuilt: new ConnectedNodeDBSchemaBuild(),
+    ConnectedNodeSchemaBuild,
+    ConnectedNodeSchemaBuilt: new ConnectedNodeSchemaBuild(),
 }

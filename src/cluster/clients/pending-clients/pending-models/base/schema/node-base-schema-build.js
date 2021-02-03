@@ -6,7 +6,7 @@ const NodeTypeEnum = require( "../../../../../network-models/types/node-type-enu
 const NodeConsensusTypeEnum = require( "../../../../../network-models/types/node-consensus-type-enum")
 
 
-class NodeBaseDBSchemaBuild extends DBSchemaBuild{
+class NodeBaseSchemaBuild extends DBSchemaBuild{
 
     constructor(schema) {
 
@@ -131,7 +131,7 @@ class NodeBaseDBSchemaBuild extends DBSchemaBuild{
 
                             if (this.seedNode) return true;
 
-                            if ( !NodeBaseDBSchemaBuild.validateNodeDate(date, this._scope ) )
+                            if ( !NodeBaseSchemaBuild.validateNodeDate(date, this._scope ) )
                                 throw new Exception(this, "Node Lifespan is invalid");
 
                             return true;
@@ -178,6 +178,6 @@ class NodeBaseDBSchemaBuild extends DBSchemaBuild{
 }
 
 module.exports = {
-    NodeBaseDBSchemaBuild,
-    NodeBaseDBSchemaBuilt: new NodeBaseDBSchemaBuild(),
+    NodeBaseSchemaBuild,
+    NodeBaseSchemaBuilt: new NodeBaseSchemaBuild(),
 }
