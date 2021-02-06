@@ -11,12 +11,14 @@ class TotalPeersSchemaBuild extends DBSchemaBuild{
 
                 table: {
                     default: "network",
-                    fixedBytes: 7,
+                    minSize: 7,
+                    maxSize: 7,
                 },
 
                 id: {
                     default: "TotalPeers",
-                    fixedBytes: 10,
+                    minSize: 10,
+                    maxSize: 10,
                 },
 
                 count: {

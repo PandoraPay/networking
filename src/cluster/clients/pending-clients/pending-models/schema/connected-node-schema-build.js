@@ -15,7 +15,8 @@ class ConnectedNodeSchemaBuild extends NodeBaseSchemaBuild {
 
                 table: {
                     default: "node_connect",
-                    fixedBytes: 12,
+                    maxSize: 12,
+                    minSize: 12,
                 },
 
                 connection: {

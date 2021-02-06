@@ -55,10 +55,11 @@ module.exports = class PendingClients {
             /**
              * In case the cluster is master, clear the previous pending queue and fill it with the seed nodes
              */
-
-            //clear the pending queue
-            await this._clearPendingQueue();
-            await this._clearConnectedList();
+            if (!BROWSER){
+                //clear the pending queue
+                await this._clearPendingQueue();
+                await this._clearConnectedList();
+            }
 
         });
 

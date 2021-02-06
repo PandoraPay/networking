@@ -71,7 +71,13 @@ const library = Helper.merge( kernel, {
             CommonRpcRouter,
             SocketRouterPlugin,
         },
+
         KnownPeers,
+
+        enums: {
+            NodeConnectionTypeEnum,
+            NodeConsensusTypeEnum,
+        },
 
     },
 

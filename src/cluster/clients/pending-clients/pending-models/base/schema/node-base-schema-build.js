@@ -16,7 +16,8 @@ class NodeBaseSchemaBuild extends DBSchemaBuild{
 
                     table: {
                         default: "base_node",
-                        fixedBytes: 9,
+                        minSize: 9,
+                        maxSize: 9,
                     },
 
                     /**
@@ -159,6 +160,8 @@ class NodeBaseSchemaBuild extends DBSchemaBuild{
                      */
                     id: {
 
+                        minSize: 5,
+                        maxSize: 255,
                         default (){
                             return `${ this._ipAddress.toString().replace(/:/g, "+") }`;
                         },

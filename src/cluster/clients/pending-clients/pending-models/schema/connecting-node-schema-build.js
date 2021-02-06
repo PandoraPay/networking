@@ -14,7 +14,8 @@ class ConnectingNodeSchemaBuild extends NodeBaseSchemaBuild{
                 table: {
 
                     default: "node_list",
-                    fixedBytes: 9,
+                    minSize: 9,
+                    maxSize: 9,
 
                 },
 
