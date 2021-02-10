@@ -95,6 +95,11 @@ module.exports = class CommonSocketRouter extends SocketsRouter{
                 server: this._scope.masterCluster.totalPeers.server,
             },
 
+            cluster: {
+                isMaster: this._scope.masterCluster.isMaster,
+                workerId: this._scope.masterCluster.workerId,
+            }
+
         }
 
     }
