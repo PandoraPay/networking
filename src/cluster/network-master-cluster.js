@@ -118,7 +118,7 @@ module.exports = class NetworkMasterCluster extends MasterCluster {
 
     }
 
-    async broadcastToSocketsAsync(name, data, timeout, senderSockets={}){
+    async broadcastToSocketsAsync(name, data, timeout, senderSockets={}, filter ){
 
         if ( Array.isArray(senderSockets)  ) {
             const hashMap = {};
@@ -128,10 +128,10 @@ module.exports = class NetworkMasterCluster extends MasterCluster {
 
         let array = [];
         if (this.clientsCluster)
-            array.push( this.clientsCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets) );
+            array.push( this.clientsCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets, filter) );
 
         if (this.serverCluster)
-            array.push( this.serverCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets) );
+            array.push( this.serverCluster.broadcastToSocketsAsync(name, data, timeout, senderSockets, filter) );
 
         array = await Promise.all(array);
 

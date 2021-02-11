@@ -177,12 +177,12 @@ module.exports = class NetworkClientsCluster extends ClientsCluster {
 
 	}
 
-	async broadcastToSocketsAsync(name, data, timeout, senderSockets = {}){
+	async broadcastToSocketsAsync(name, data, timeout, senderSockets = {}, filter){
 
 		let array = [];
 
 		for (const address in this.list)
-			if (!senderSockets[this.list[address].id])
+			if (!senderSockets[this.list[address].id] && (!filter || !filter(this.list[address])) )
 				array.push( this.list[address].emitAsync(name, data, timeout) );
 
 		array = await Promise.all(array);

@@ -165,7 +165,7 @@ module.exports = class NetworkHttpServer extends HttpServer {
 
     }
 
-    broadcastToSocketsAsync(name, data, timeout, senderSockets = {}){
+    broadcastToSocketsAsync(name, data, timeout, senderSockets = {}, filter){
         return []
     }
 

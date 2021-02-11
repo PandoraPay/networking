@@ -31,12 +31,13 @@ module.exports = class NetworkServerCluster extends ServerCluster {
 
 	}
 
-	async broadcastToSocketsAsync(name, data, timeout, senderSockets){
+	async broadcastToSocketsAsync(name, data, timeout, senderSockets, filter){
+
 		if (!this.httpServer) return [];
 
 		const out = await Promise.all([
-			this.httpServer.broadcastToSocketsAsync(name, data, timeout, senderSockets),
-			this.serverSocket.broadcastToSocketsAsync(name, data, timeout, senderSockets),
+			this.httpServer.broadcastToSocketsAsync(name, data, timeout, senderSockets, filter),
+			this.serverSocket.broadcastToSocketsAsync(name, data, timeout, senderSockets, filter),
 		]);
 
 		return out[0].concat(out[1]);
