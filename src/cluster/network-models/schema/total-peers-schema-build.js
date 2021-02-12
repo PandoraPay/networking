@@ -36,6 +36,12 @@ class TotalPeersSchemaBuild extends DBSchemaBuild{
                     position: 102,
                 }
 
+            },
+
+            options:{
+                hashing:{
+                    enabled: false,
+                }
             }
 
         }, schema, true));

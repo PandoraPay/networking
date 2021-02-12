@@ -45,7 +45,8 @@ class ConnectedNodeSchemaBuild extends NodeBaseSchemaBuild {
                     position: 202,
                 },
 
-            }
+            },
+
         },  schema, true) );
 
     }

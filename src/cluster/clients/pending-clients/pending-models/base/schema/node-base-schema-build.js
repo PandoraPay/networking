@@ -168,7 +168,14 @@ class NodeBaseSchemaBuild extends DBSchemaBuild{
 
                     },
 
-                }
+                },
+
+
+                options: {
+                    hashing:{
+                        enabled: false,
+                    }
+                },
 
             },
             schema, true));

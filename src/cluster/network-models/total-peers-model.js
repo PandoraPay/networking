@@ -49,7 +49,7 @@ module.exports = class TotalPeersModel extends DBModel {
 
 
         //acquire lock
-        const lock = await this.lock( );
+        const lock = await this.lock( -1, -1, 50, 'total-peers');
 
         if (!lock) throw new Exception(this, "lock was not acquired");
 

@@ -175,10 +175,9 @@ module.exports = class PendingClients {
                 if ( this._scope.bansManager.checkBan("client", connectingNode.address ) )
                     return;
 
-                let lock = !this._scope.db.isSynchronized;
+                this._scope.logger.info( this, 'locking...', { connectingNode: connectingNode.id } );
 
-                if (this._scope.db.isSynchronized)
-                    lock = await connectingNode.lock( this._scope.argv.masterCluster.clientsCluster.pendingClients.timeoutLock, -1);
+                let lock = await connectingNode.lock( -1, 0, 0, connectingNode.id, );
 
                 //lock acquired
                 if (lock){
