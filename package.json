@@ -33,7 +33,7 @@
     "ipaddr.js": "^1.8.1",
     "is-array-buffer": "^1.0.1",
     "socket.io": "2.1.1",
-    "socket.io-client": "2.1.1"
+    "socket.io": ">=2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
