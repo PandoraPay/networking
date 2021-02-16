@@ -1,9 +1,9 @@
 const NodeConsensusTypeEnum = require( "./network-models/types/node-consensus-type-enum" )
 
-const {Helper} = require('kernel').helpers;
-const {DBSchemaHelper} = require('kernel').db;
+const {Helper} = PandoraLibrary.helpers;
+const {DBSchemaHelper} = PandoraLibrary.db;
 
-const  {setAsyncInterval, clearAsyncInterval} = require('kernel').helpers.AsyncInterval;
+const  {setAsyncInterval, clearAsyncInterval} = PandoraLibrary.helpers.AsyncInterval;
 
 module.exports = class KnownNodes {
 

@@ -1,7 +1,7 @@
 const JsonRpcRouter = require( "../routes/json-rpc-router" )
 
-const {CryptoHelper} = require('kernel').helpers.crypto;
-const {Helper} = require('kernel').helpers;
+const {CryptoHelper} = PandoraLibrary.helpers.crypto;
+const {Helper} = PandoraLibrary.helpers;
 
 module.exports = class CommonJsonRpcRouter extends JsonRpcRouter{
 

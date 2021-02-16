@@ -1,4 +1,4 @@
-const {cluster} = require('kernel').masterCluster;
+const {cluster} = PandoraLibrary.masterCluster;
 
 module.exports = {
 
@@ -12,25 +12,24 @@ module.exports = {
 
             if (cluster.isMaster){
 
-                for (let i=-1; i < parentCluster.workerCount; i++)
-                    if ( i !== 0)
-                        this.bans.client [ `${parentCluster.serverCluster.serverSocket.protocol}${parentCluster.serverCluster.httpServer.sslUse ? 's' : ''}://127.0.0.1:${parentCluster.serverCluster.httpServer.port + i + 1 }` ] = true;
+                for (let i=0; i <= parentCluster.workerCount; i++)
+                    if ( i !== 1)
+                        this.bans.client [ `${parentCluster.serverCluster.serverSocket.protocol}${parentCluster.serverCluster.httpServer.sslUse ? 's' : ''}://127.0.0.1:${parentCluster.serverCluster.httpServer.port + i }` ] = true;
 
             } else {
 
-                for (let i=-1; i < parentCluster.workerCount; i++) {
+                for (let i=0; i <= parentCluster.workerCount; i++) {
 
                     //slaveIndex is string
-                    if ( process.env.SLAVE_INDEX == i - 1  )
+                    if ( Number.parseInt(process.env.SLAVE_INDEX) !== i + 1  )
                         continue;
 
-                    this.bans.client [`${parentCluster.serverCluster.serverSocket.protocol}${parentCluster.serverCluster.httpServer.sslUse ? 's' : ''}://127.0.0.1:${parentCluster.serverCluster.httpServer.port + i + 1}`] = true;
+                    this.bans.client [ `${parentCluster.serverCluster.serverSocket.protocol}${parentCluster.serverCluster.httpServer.sslUse ? 's' : ''}://127.0.0.1:${parentCluster.serverCluster.httpServer.port + i }` ] = true;
                 }
 
             }
 
-            //console.log( process.env.SLAVE_INDEX, this.bans );
-
+            // console.log( process.env.SLAVE_INDEX, this.bans );
 
         }catch(err){
             console.error("ArgvBansManager _initArgv raised an error ", err);

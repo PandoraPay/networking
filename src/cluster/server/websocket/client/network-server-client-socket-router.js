@@ -1,4 +1,4 @@
-const {Helper} = require('kernel').helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 const CommonSocketRouter = require( "../../../../sockets/protocol/common-socket-router" );
 

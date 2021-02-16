@@ -31,7 +31,7 @@ const ConnectingNodeSchemaBuild = require('./src/cluster/clients/pending-clients
 const ConnectedNodeSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/schema/connected-node-schema-build')
 const NodeBaseSchemaBuild = require('./src/cluster/clients/pending-clients/pending-models/base/schema/node-base-schema-build')
 
-const {Helper} = require('kernel').helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 const library = Helper.merge( kernel, {
 
@@ -110,13 +110,13 @@ const library = Helper.merge( kernel, {
 
 
 if (typeof window !== "undefined") {
-    window.library = library;
+    window.PandoraLibrary = library;
     window.PandoraPay = window.app = library.app;
     global.networking = library;
 }
 
 if (typeof global !== "undefined"){
-    global.library = library;
+    global.PandoraLibrary = library;
     global.PandoraPay = global.app = library.app;
     global.networking = library;
 }

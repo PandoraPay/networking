@@ -1,4 +1,4 @@
-const {Exception, Helper } = require('kernel').helpers;
+const {Exception, Helper } = PandoraLibrary.helpers;
 
 const client = require( 'socket.io-client');
 

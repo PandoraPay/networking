@@ -1,12 +1,11 @@
-const kernel = require('kernel');
-const {MasterCluster} = kernel.masterCluster;
+const {MasterCluster} = PandoraLibrary.masterCluster;
 
 const Argv = require( "../bin/argv/argv" )
 
 const Tests = require( '../tests/tests/tests-index');
 const NetworkMasterCluster = require( "./cluster/network-master-cluster")
 
-module.exports = class App extends kernel.utils.App {
+module.exports = class App extends PandoraLibrary.utils.App {
 
     setAdditionalEvents(){
 

@@ -1,6 +1,6 @@
 const ipaddr = require('ipaddr.js');
 
-const {Exception} = require('kernel').helpers;
+const {Exception} = PandoraLibrary.helpers;
 
 module.exports = class ipAddress {
 

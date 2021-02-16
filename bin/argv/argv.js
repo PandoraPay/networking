@@ -1,4 +1,4 @@
-const {Helper} = require('kernel').helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 const ArgvMasterCluster = require( "./modules/master-cluster/argv-master-cluster");
 const ArgvNetworkSettings = require("./modules/network-settings/argv-network-settings")

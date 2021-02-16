@@ -2,8 +2,8 @@ const PendingClients = require( "./pending-clients/pending-clients");
 const NetworkClientSocketRouter = require( "./pending-clients/client/websocket/network-client-socket-router");
 const NetworkClientSocket = require('../clients/pending-clients/client/websocket/network-client-socket');
 
-const {ClientsCluster} = require('kernel').masterCluster;
-const { Helper, Exception } = require('kernel').helpers;
+const {ClientsCluster} = PandoraLibrary.masterCluster;
+const { Helper, Exception } = PandoraLibrary.helpers;
 
 module.exports = class NetworkClientsCluster extends ClientsCluster {
 	

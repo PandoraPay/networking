@@ -1,5 +1,5 @@
-const {DBSchemaBuild} = require('kernel').db;
-const {Helper, Exception, EnumHelper} = require('kernel').helpers;
+const {DBSchemaBuild} = PandoraLibrary.db;
+const {Helper, Exception, EnumHelper} = PandoraLibrary.helpers;
 
 const {NodeBaseSchemaBuild} = require('../base/schema/node-base-schema-build')
 

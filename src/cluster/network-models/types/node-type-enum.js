@@ -1,4 +1,4 @@
-const { Exception } = require('kernel').helpers;
+const { Exception } = PandoraLibrary.helpers;
 
 const NodeTypeEnum = {
 

@@ -1,4 +1,4 @@
-const {Helper} = require('kernel').helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 const NodeConnectionTypeEnum = require( "../../../network-models/types/node-connection-type-enum");
 const NodeConsensusTypeEnum = require( "../../../network-models/types/node-consensus-type-enum")

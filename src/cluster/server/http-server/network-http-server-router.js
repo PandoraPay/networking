@@ -1,4 +1,4 @@
-const {Exception, BufferHelper } = require('kernel').helpers;
+const {Exception, BufferHelper } = PandoraLibrary.helpers;
 
 const CommonSocketRouter = require( "../../../sockets/protocol/common-socket-router" );
 

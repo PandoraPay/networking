@@ -1,4 +1,4 @@
-const {describe} = require('kernel').tests;
+const {describe} = PandoraLibrary.tests;
 
 const ipAdress = require( "../../../../src/network/ip-address" )
 

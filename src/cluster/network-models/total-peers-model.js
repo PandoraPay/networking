@@ -1,6 +1,6 @@
-const {DBModel} = require('kernel').db;
-const {Helper} = require('kernel').helpers;
-const {Exception} = require('kernel').helpers;
+const {DBModel} = PandoraLibrary.db;
+const {Helper} = PandoraLibrary.helpers;
+const {Exception} = PandoraLibrary.helpers;
 
 const {TotalPeersSchemaBuilt} = require('./schema/total-peers-schema-build')
 

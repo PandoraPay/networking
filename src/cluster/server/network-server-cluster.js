@@ -1,5 +1,5 @@
 
-const {ServerCluster} = require('kernel').masterCluster;
+const {ServerCluster} = PandoraLibrary.masterCluster;
 
 const NetworkHttpServer = require("./http-server/network-http-server");
 const NetworkServerSocket = require("./websocket/network-server-socket");

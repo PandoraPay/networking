@@ -1,6 +1,6 @@
 
-const {MasterCluster} = require('kernel').masterCluster;
-const {Helper} = require('kernel').helpers;
+const {MasterCluster} = PandoraLibrary.masterCluster;
+const {Helper} = PandoraLibrary.helpers;
 
 const NetworkServerCluster = BROWSER ? undefined : require("./server/network-server-cluster");
 

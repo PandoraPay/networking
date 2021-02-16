@@ -1,6 +1,6 @@
 const server = require('socket.io');
-const {Exception } = require('kernel').helpers;
-const {Helper} = require('kernel').helpers;
+const {Exception } = PandoraLibrary.helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 const ConnectedNodeModel = require("../../clients/pending-clients/pending-models/connected-node-model");
 const NetworkServerClientSocket = require("./client/network-server-client-socket")

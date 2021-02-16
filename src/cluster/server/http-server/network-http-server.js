@@ -7,8 +7,8 @@ const sticky = require('sticky-session');
 const NetworkHttpServerRouter = require( "./network-http-server-router" )
 const HttpServerHelper = require( "./http-server-helper" )
 
-const {Helper} = require('kernel').helpers;
-const {HttpServer} = require('kernel').masterCluster;
+const {Helper} = PandoraLibrary.helpers;
+const {HttpServer} = PandoraLibrary.masterCluster;
 
 /**
  * scope:

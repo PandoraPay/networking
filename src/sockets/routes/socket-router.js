@@ -5,7 +5,7 @@
 
 const RoutesGuardian = require( "./guardian/routes-guardian" );
 const JsonRpcRouter = require( "./json-rpc-router");
-const {Helper} = require('kernel').helpers;
+const {Helper} = PandoraLibrary.helpers;
 
 module.exports = class SocketRouter {
 

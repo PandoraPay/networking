@@ -1,5 +1,5 @@
 const ipAddress = require( "./ip-address" );
-const {Exception, BufferHelper} = require('kernel').helpers;
+const {Exception, BufferHelper} = PandoraLibrary.helpers;
 
 module.exports = class BasicSocket {
 

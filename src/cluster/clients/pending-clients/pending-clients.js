@@ -1,4 +1,4 @@
-const {Exception, BufferHelper } = require('kernel').helpers;
+const {Exception, BufferHelper } = PandoraLibrary.helpers;
 
 const NodeConnectionTypeEnum = require( "../../network-models/types/node-connection-type-enum" )
 

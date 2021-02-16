@@ -1,6 +1,6 @@
-const {describe} = require('kernel').tests;
-const  {Helper} = require('kernel').helpers;
-const {asyncTimeout} = require('kernel').helpers.AsyncInterval;
+const {describe} = PandoraLibrary.tests;
+const  {Helper} = PandoraLibrary.helpers;
+const {asyncTimeout} = PandoraLibrary.helpers.AsyncInterval;
 
 module.exports = function run (scope){
 

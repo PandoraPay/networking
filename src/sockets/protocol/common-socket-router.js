@@ -1,4 +1,4 @@
-const {Helper, Exception} = require('kernel').helpers;
+const {Helper, Exception} = PandoraLibrary.helpers;
 
 const SocketsRouter = require( "../routes/socket-router")
 const CommonRpcRouter = require( "./common-rpc-router");
